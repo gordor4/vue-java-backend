@@ -1,2 +1,2 @@
 # backend
-Spring Boot wildfly backend
+Java EE Rest backend
