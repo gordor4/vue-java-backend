@@ -6,9 +6,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "budget", propOrder = { "id", "amount" })
-@Table(name = "budget")
-@NamedQuery(name = "getAllUserConsumption", query = "Select con from Consumption con")
+@XmlType(name = "consumption", propOrder = { "id", "amount", "description" })
+@Table(name = "consumption")
+@NamedQuery(name = "getAllUserConsumption", query = "Select con from Consumption con WHERE con.owner.id = :owner_id")
 public class Consumption
 {
 	@Id
@@ -17,6 +17,9 @@ public class Consumption
 
 	private Double amount;
 	private String description;
+
+	@ManyToOne
+	private User owner;
 
 	public Consumption() {}
 
