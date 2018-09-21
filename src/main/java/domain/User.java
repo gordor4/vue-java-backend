@@ -6,14 +6,20 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "user", propOrder = { "id", "username", "password" })
+@XmlType(name = "user", propOrder = {"id", "username", "password"})
 @Table(name = "user")
-@NamedQuery(name = "getAllUser", query = "Select usr from User usr")
+@NamedQueries({
+		@NamedQuery(name = "FIND_USER", query = "Select usr from User usr WHERE usr.username = :username and usr.password = :password"),
+		@NamedQuery(name = "FIND_ALL", query = "Select usr from User usr")
+})
 public class User
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+
+	public static final String FIND_USER = "FIND_USER";
+	public static final String FIND_ALL = "FIND_ALL";
 
 	private String username;
 	private String password;

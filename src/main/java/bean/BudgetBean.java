@@ -9,4 +9,6 @@ public class BudgetBean
 {
 	@PersistenceContext(unitName = "postgres")
 	public EntityManager entityManager;
+
+
 }

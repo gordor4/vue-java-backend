@@ -6,10 +6,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "consumption", propOrder = { "id", "amount", "description" })
-@Table(name = "consumption")
-@NamedQuery(name = "getAllUserConsumption", query = "Select con from Consumption con WHERE con.owner.id = :owner_id")
-public class Consumption
+@XmlType(name = "payment", propOrder = { "id", "amount", "description" })
+@Table(name = "payment")
+@NamedQuery(name = "getAllUserConsumption", query = "Select con from Payment con WHERE con.owner.id = :owner_id")
+public class Payment
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,9 +21,9 @@ public class Consumption
 	@ManyToOne
 	private User owner;
 
-	public Consumption() {}
+	public Payment() {}
 
-	public Consumption(Double amount, String description)
+	public Payment(Double amount, String description)
 	{
 		this.amount = amount;
 		this.description = description;
