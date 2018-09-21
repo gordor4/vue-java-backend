@@ -1,5 +1,6 @@
 package service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,7 +25,9 @@ public class BudgetRestService
 	@JWTTokenNeeded
 	@Produces({ javax.ws.rs.core.MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public List<Payment> getUserPayment() {
-		return null;
+		Payment test = new Payment();
+		test.setAmount(321.0);
+		return new ArrayList<>();
 	}
 
 //	@POST

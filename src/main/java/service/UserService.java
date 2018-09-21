@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -99,12 +100,9 @@ public class UserService
 
 	@POST
 	@Path("/create")
-	public Response create(String username, String password)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response create(User user)
 	{
-		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
-
 		entityManager.persist(user);
 
 		String id = String.valueOf(user.getId());

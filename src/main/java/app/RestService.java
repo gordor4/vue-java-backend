@@ -7,6 +7,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import service.BudgetRestService;
+import service.UserService;
 
 
 @ApplicationPath("/rest")
@@ -16,6 +17,7 @@ public class RestService extends Application
 
 	public RestService() {
 		singletons.add(new BudgetRestService());
+		singletons.add(new UserService());
 	}
 
 	@Override
