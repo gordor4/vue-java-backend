@@ -3,6 +3,7 @@ package domain;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,9 +24,14 @@ public class User
 	public static final String FIND_ALL = "FIND_ALL";
 
 	@Column(name = "username")
+	@XmlAttribute
 	private String username;
 
+//	@Column(name = "email")
+//	private String email;
+
 	@Column(name = "password")
+	@XmlAttribute
 	private String password;
 
 	public int getId()
