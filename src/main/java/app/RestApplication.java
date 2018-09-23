@@ -11,17 +11,23 @@ import service.UserService;
 
 
 @ApplicationPath("/rest")
-public class RestService extends Application
+public class RestApplication extends Application
 {
+	private Set<Class<?>> classes = new HashSet<>();
 	private Set<Object> singletons = new HashSet<Object>();
 
-	public RestService() {
+	public RestApplication() {
 		singletons.add(new BudgetRestService());
-		singletons.add(new UserService());
+		classes.add( UserService.class);
 	}
 
 	@Override
 	public Set<Object> getSingletons() {
 		return singletons;
+	}
+
+	@Override
+	public Set<Class<?>> getClasses() {
+		return classes;
 	}
 }

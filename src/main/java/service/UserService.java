@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import bean.UserBean;
 import domain.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -30,12 +32,16 @@ import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 import static org.jboss.resteasy.util.HttpHeaderNames.AUTHORIZATION;
 
+@Stateless
 @Path("/users")
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
-@Transactional
 public class UserService
 {
+
+	@Inject
+	UserBean userBean;
+
 	@Context
 	private UriInfo uriInfo;
 
@@ -106,7 +112,11 @@ public class UserService
 		entityManager.persist(user);
 
 		String id = String.valueOf(user.getId());
-		return Response.created(uriInfo.getAbsolutePathBuilder().path(id).build()).build();
+		return Response.created(
+				uriInfo.getAbsolutePathBuilder()
+				.path(id)
+				.build()
+		).build();
 	}
 
 	@GET
