@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "user", propOrder = {"id", "username", "password"})
-@Table(name = "user")
+@Table(name = "user", schema = "public")
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "FIND_USER", query = "Select usr from User usr WHERE usr.username = :username and usr.password = :password"),
