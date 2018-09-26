@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "user", propOrder = {"id", "username", "password"})
+@XmlType(name = "user", propOrder = {"id", "username", "password", "email"})
 @Table(name = "user", schema = "public")
 @Entity
 @NamedQueries({
@@ -27,12 +27,13 @@ public class User
 	@XmlAttribute
 	private String username;
 
-//	@Column(name = "email")
-//	private String email;
-
 	@Column(name = "password")
 	@XmlAttribute
 	private String password;
+
+	@Column(name = "email")
+	@XmlAttribute
+	private String email;
 
 	public int getId()
 	{
@@ -62,5 +63,15 @@ public class User
 	public void setPassword(String password)
 	{
 		this.password = password;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
 	}
 }

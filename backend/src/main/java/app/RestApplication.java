@@ -10,15 +10,15 @@ import service.BudgetRestService;
 import service.UserService;
 
 
-@ApplicationPath("/rest")
+@ApplicationPath("/api")
 public class RestApplication extends Application
 {
 	private Set<Class<?>> classes = new HashSet<>();
-	private Set<Object> singletons = new HashSet<Object>();
+	private Set<Object> singletons = new HashSet<>();
 
 	public RestApplication() {
-		singletons.add(new BudgetRestService());
-		classes.add( UserService.class);
+		classes.add(UserService.class);
+		classes.add(BudgetRestService.class);
 	}
 
 	@Override
