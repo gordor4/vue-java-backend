@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
+import axios from './http/axios'
 import BootstrapVue from 'bootstrap-vue'
 import VeeValidate from 'vee-validate'
 import Vuetify from 'vuetify'
@@ -14,6 +14,8 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import querystring from 'querystring'
 import VueCookie from 'vue-cookie'
+import VueRecaptcha from 'vue-recaptcha'
+import store from './store'
 
 Vue.config.productionTip = false;
 
@@ -22,9 +24,7 @@ Vue.use(querystring);
 Vue.use(VeeValidate);
 Vue.use(Vuetify);
 Vue.use(VueCookie);
-
-//axios.defaults.baseURL = 'http://gordor.host';
-axios.defaults.baseURL = 'http://localhost:8080/rest-1.0-SNAPSHOT/rest/';
+Vue.use(VueRecaptcha);
 
 Vue.prototype.$http = axios;
 Vue.prototype.$querystring = querystring;
@@ -32,6 +32,7 @@ Vue.prototype.$querystring = querystring;
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 });

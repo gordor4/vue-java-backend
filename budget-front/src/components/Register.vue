@@ -1,5 +1,4 @@
 <template>
-  <div class="hello">
     <v-app>
       <v-container class="md-content">
         <v-card row class="text-xs-center">
@@ -25,7 +24,6 @@
 
       </v-container>
     </v-app>
-  </div>
 </template>
 
 <script>
@@ -62,38 +60,4 @@
 </script>
 
 <style scoped>
-  .hello {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .md-content {
-    z-index: 1;
-    padding: 40px;
-    width: 600px;
-    position: relative;
-  }
-
-  .form {
-    padding: 30px;
-  }
-
-  .centered-container {
-    margin-top: 50px;
-  }
-
-  .loading-overlay {
-    z-index: 10;
-    top: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 </style>

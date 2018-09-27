@@ -30,17 +30,4 @@ public class BudgetRestService
 		return new ArrayList<>();
 	}
 
-//	@POST
-//	@Path("/addmovie")
-//	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-//	public Response addMovie(Payment budget) {
-//		if (null != inventory.get(budget.getImdbId())) {
-//			return Response
-//					.status(Response.Status.NOT_MODIFIED)
-//					.entity("Payment is Already in the database.").build();
-//		}
-//
-//		inventory.put(budget.getImdbId(), budget);
-//		return Response.status(Response.Status.CREATED).build();
-//	}
 }

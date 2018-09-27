@@ -26,6 +26,8 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter
 	@Inject
 	private KeyGenerator keyGenerator;
 
+	public static final String USER_ID = "USER_ID";
+
 	@Override
 	public void filter(ContainerRequestContext requestContext)
 	{
@@ -42,6 +44,8 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter
 			Key key = keyGenerator.generateKey();
 			Jwts.parser().setSigningKey(key).parseClaimsJws(token);
 			logger.info("#### valid token : " + token);
+
+			requestContext.setProperty(USER_ID, token);
 
 		} catch (Exception e) {
 			logger.severe("#### invalid token : " + token);

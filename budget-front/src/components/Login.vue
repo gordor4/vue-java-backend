@@ -14,12 +14,16 @@
               <v-text-field v-model="login.password" type="password" label="Пароль"></v-text-field>
 
               <div class="md-layout mb-5">
-                <a href="/resetpassword">Восстановить пароль</a>
+                <router-link to="/reset">Восстановить пароль</router-link>
               </div>
-              <div class="md-layout mb-5">
+              <div class="md-layout mb-3">
                 <router-link to="/register">Регистрация</router-link>
                 <v-btn @click="auth">Войти</v-btn>
               </div>
+              <v-alert v-if="errorText" :value="true" type="error">
+                {{errorText}}
+              </v-alert>
+
             </div>
           </v-flex>
         </div>
@@ -38,11 +42,13 @@
         login: {
           username: "",
           password: ""
-        }
+        },
+        errorText: ""
       };
     },
     methods: {
       auth() {
+        this.errorText = '';
         this.loading = true;
 
         this.$http.post('users/login', this.$querystring.stringify(
@@ -65,42 +71,20 @@
             }
           })
           .catch(error => {
+            switch(error.response.status) {
+              case 15:
+                this.errorText = 'Пользователь не найден';
+                break;
+              default:
+                this.errorText = 'при авторизации произошла ошибка';
+            }
             this.loading = false;
-            //TODO: implement error handling
-            console.log(error);
+
           });
       }
     }
   }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .hello {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .form {
-    padding: 30px;
-  }
-
-  .centered-container {
-    margin-top: 50px;
-  }
-
-  .loading-overlay {
-    z-index: 10;
-    top: 0;
-    left: 0;
-    right: 0;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 </style>

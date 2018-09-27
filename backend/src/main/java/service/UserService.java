@@ -4,7 +4,6 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -19,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import anotation.JWTTokenNeeded;
 import bean.UserBean;
 import domain.TokenResponse;
 import domain.User;
@@ -27,7 +27,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import utils.KeyGenerator;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @Stateless
@@ -61,10 +60,10 @@ public class UserService
 		try
 		{
 			// Authenticate the user using the credentials provided
-			authenticate(username, password);
+			String id = authenticate(username, password);
 
 			// Issue a token for the user
-			String token = issueToken(username);
+			String token = issueToken(username, id);
 
 			TokenResponse tokenResponse = new TokenResponse(token);
 
@@ -77,7 +76,7 @@ public class UserService
 		}
 	}
 
-	private void authenticate(String login, String password)
+	private String authenticate(String login, String password)
 	{
 		TypedQuery<User> query = entityManager.createNamedQuery(User.FIND_USER, User.class);
 		query.setParameter("username", login);
@@ -87,14 +86,17 @@ public class UserService
 
 		if (user == null)
 			throw new SecurityException("Invalid user/password");
+
+		return String.valueOf(user.getId());
 	}
 
-	private String issueToken(String login)
+	private String issueToken(String login, String id)
 	{
 		Key key = keyGenerator.generateKey();
 
 		String jwtToken = Jwts.builder()
 				.setSubject(login)
+				.setId(id)
 				.setIssuer(uriInfo.getAbsolutePath().toString())
 				.setIssuedAt(new Date())
 				.setExpiration(toDate(LocalDateTime.now().plusDays(15L)))
@@ -121,28 +123,13 @@ public class UserService
 	}
 
 	@GET
-	@Path("/{id}")
-	public Response findById(@PathParam("id") String id)
+	@Path("/get")
+	@JWTTokenNeeded
+	public Response findAllUsers(String id)
 	{
 		User user = entityManager.find(User.class, id);
 
-		if (user == null)
-			return Response.status(NOT_FOUND).build();
-
 		return Response.ok(user).build();
-	}
-
-	@GET
-	@Path("/get")
-	public Response findAllUsers()
-	{
-		TypedQuery<User> query = entityManager.createNamedQuery(User.FIND_ALL, User.class);
-		List<User> allUsers = query.getResultList();
-
-		if (allUsers == null)
-			return Response.status(NOT_FOUND).build();
-
-		return Response.ok(allUsers).build();
 	}
 
 	@DELETE

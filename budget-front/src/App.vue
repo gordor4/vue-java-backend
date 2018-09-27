@@ -24,6 +24,14 @@
     align-items: center;
   }
 
+  .form {
+    padding: 30px;
+  }
+
+  .centered-container {
+    margin-top: 50px;
+  }
+
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
