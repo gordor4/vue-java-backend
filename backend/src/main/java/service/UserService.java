@@ -18,10 +18,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import anotation.JWTTokenNeeded;
 import bean.UserBean;
 import domain.TokenResponse;
 import domain.User;
+import filter.JWTTokenNeeded;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import utils.KeyGenerator;
@@ -125,7 +125,8 @@ public class UserService
 	@GET
 	@Path("/get")
 	@JWTTokenNeeded
-	public Response findAllUsers(String id)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response findUser(@QueryParam("id") String id)
 	{
 		User user = entityManager.find(User.class, id);
 

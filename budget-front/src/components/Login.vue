@@ -76,7 +76,7 @@
                 this.errorText = 'Пользователь не найден';
                 break;
               default:
-                this.errorText = 'при авторизации произошла ошибка';
+                this.errorText = 'При авторизации произошла ошибка';
             }
             this.loading = false;
 
