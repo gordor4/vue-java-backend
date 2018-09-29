@@ -3,10 +3,11 @@ package filter;
 import java.security.Key;
 import java.util.logging.Logger;
 
+import javax.annotation.Priority;
 import javax.inject.Inject;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
@@ -16,7 +17,7 @@ import utils.KeyGenerator;
 
 @Provider
 @JWTTokenNeeded
-@PreMatching
+@Priority(Priorities.AUTHENTICATION)
 public class JWTTokenNeededFilter implements ContainerRequestFilter
 {
 	private Logger logger = Logger.getLogger("JWTTokenNeededFilter");
