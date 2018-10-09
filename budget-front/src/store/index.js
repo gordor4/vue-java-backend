@@ -18,11 +18,14 @@ export default new Vuex.Store({
   actions: {
     loadUserData(context) {
       console.log('start download user data');
-      axios.get('users/get', {
+      axios.post('users/get', {
         headers: {
           'Content-Type': 'application/json',
         }})
-        .then(response => context.commit('setUser', response.data.user))
+        .then(response => {
+          console.log(response.data)
+          context.commit('setUser', response.data)
+        })
         .catch(reason => console.log(reason))
     },
   },

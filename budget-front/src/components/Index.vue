@@ -7,7 +7,7 @@
             <v-avatar :size="avatarSize" color="grey lighten-4">
               <img src="../assets/logo.png" alt="avatar">
             </v-avatar>
-            <span class="ml-3">{{user.username}}}</span>
+            <span class="ml-3">{{user.username}}</span>
           </v-layout>
           <template v-for="item in items">
             <v-layout row v-if="item.heading" align-center :key="item.heading">

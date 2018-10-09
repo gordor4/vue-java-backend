@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 @Table(name = "user", schema = "public")
 @Entity
 @NamedQueries({
-		@NamedQuery(name = "FIND_USER", query = "Select usr from User usr WHERE usr.username = :username and usr.password = :password"),
+		@NamedQuery(name = "FIND_USER", query = "Select usr from User usr WHERE usr.username = :username"),
 		@NamedQuery(name = "FIND_ALL", query = "Select usr from User usr")
 })
 public class User

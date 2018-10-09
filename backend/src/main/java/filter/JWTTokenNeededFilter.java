@@ -32,13 +32,10 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter
 	public void filter(ContainerRequestContext requestContext)
 	{
 		try {
-			// Get the HTTP Authorization header from the request
 			String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
 
-			// Extract the token from the HTTP Authorization header
 			String token = authorizationHeader.substring("Bearer".length()).trim();
 
-			// Validate the token
 			Key key = keyGenerator.generateKey();
 			String id = (String)Jwts.parser()
 					.setSigningKey(key)
@@ -47,8 +44,7 @@ public class JWTTokenNeededFilter implements ContainerRequestFilter
 
 			logger.info("#### valid token : " + token);
 
-			requestContext.setProperty(USER_ID, id);
-
+			requestContext.setProperty(USER_ID, Integer.valueOf(id));
 		} catch (Exception e) {
 			logger.severe("#### invalid token");
 			requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
