@@ -13,11 +13,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.*;
-import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.*;
 
 import bean.UserBean;
-import domain.Password;
+import utils.MailUtil;
+import utils.PasswordUtil;
 import domain.TokenResponse;
 import domain.User;
 import filter.JWTTokenNeeded;
@@ -43,6 +43,9 @@ public class UserService {
     private UriInfo uriInfo;
 
     @Inject
+    private MailUtil mailUtil;
+
+    @Inject
     @Default
     private KeyGenerator keyGenerator;
 
@@ -66,6 +69,8 @@ public class UserService {
 
             TokenResponse tokenResponse = new TokenResponse(token);
 
+            mailUtil.send("rus.min96@yandex.ru", "Re", "Re");
+
             // Return the token on the response
             return Response.ok(tokenResponse).build();
         } catch (Exception e) {
@@ -78,7 +83,7 @@ public class UserService {
         query.setParameter("username", login);
         User user = query.getSingleResult();
 
-        if (user == null || !Password.check(password, user.getPassword()))
+        if (user == null || !PasswordUtil.check(password, user.getPassword()))
             throw new SecurityException("Invalid user/password");
 
         return String.valueOf(user.getId());
@@ -106,7 +111,7 @@ public class UserService {
     public Response create(User user) {
         try {
             String userPassword = user.getPassword();
-            user.setPassword(Password.getSaltedHash(userPassword));
+            user.setPassword(PasswordUtil.getSaltedHash(userPassword));
 
             entityManager.persist(user);
 
