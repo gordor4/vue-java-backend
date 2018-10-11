@@ -5,26 +5,27 @@
         <div class="centered-container">
           <v-flex>
             <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
-            <div class="form">
+            <v-form ref="form" class="form" v-model="valid">
               <v-card-title>
                 <h1>Авторизация</h1>
               </v-card-title>
 
-              <v-text-field v-model="login.username" label="Имя пользователя"></v-text-field>
-              <v-text-field v-model="login.password" type="password" label="Пароль"></v-text-field>
+              <v-text-field v-model="login.username" :rules="usernameRules" required
+                            label="Имя пользователя"></v-text-field>
+              <v-text-field v-model="login.password" :rules="passwordRules" required type="password"
+                            label="Пароль"></v-text-field>
 
-              <div class="md-layout mb-5">
+              <div class="md-layout mt-2 mb-5">
                 <router-link to="/reset">Восстановить пароль</router-link>
               </div>
               <div class="md-layout mb-3">
                 <router-link to="/register">Регистрация</router-link>
                 <v-btn @click="auth">Войти</v-btn>
               </div>
-              <v-alert v-if="errorText" :value="true" type="error">
-                {{errorText}}
-              </v-alert>
-
-            </div>
+            </v-form>
+            <v-alert v-if="errorText" :value="true" type="error">
+              {{errorText}}
+            </v-alert>
           </v-flex>
         </div>
       </v-card>
@@ -38,49 +39,58 @@
     name: 'Login',
     data() {
       return {
+        valid: false,
         loading: false,
         login: {
           username: "",
           password: ""
         },
-        errorText: ""
+        errorText: "",
+        usernameRules: [
+          v => !!v || 'Имя пользователя обязательно'
+        ],
+        passwordRules: [
+          v => !!v || 'Пароль обязателен'
+        ]
       };
     },
     methods: {
       auth() {
-        this.errorText = '';
-        this.loading = true;
+        if (this.$refs.form.validate()) {
+          this.errorText = '';
+          this.loading = true;
 
-        this.$http.post('users/login', this.$querystring.stringify(
-          {
-            username: this.login.username,
-            password: this.login.password
-          }),
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            }
-          })
-          .then(response => {
-            this.loading = false;
-            let newToken =  response.data.token;
+          this.$http.post('users/login', this.$querystring.stringify(
+            {
+              username: this.login.username,
+              password: this.login.password
+            }),
+            {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+            .then(response => {
+              this.loading = false;
+              let newToken = response.data.token;
 
-            if(newToken) {
-              this.$cookie.set('token', newToken, 15);
-              this.$router.push("index")
-            }
-          })
-          .catch(error => {
-            switch(error.response.status) {
-              case 15:
-                this.errorText = 'Пользователь не найден';
-                break;
-              default:
-                this.errorText = 'При авторизации произошла ошибка';
-            }
-            this.loading = false;
+              if (newToken) {
+                this.$cookie.set('token', newToken, 15);
+                this.$router.push("index")
+              }
+            })
+            .catch(error => {
+              switch (error.response.status) {
+                case 15:
+                  this.errorText = 'Пользователь не найден';
+                  break;
+                default:
+                  this.errorText = 'При авторизации произошла ошибка';
+              }
+              this.loading = false;
 
-          });
+            });
+        }
       }
     }
   }

@@ -1,23 +1,6 @@
 package service;
 
-import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.logging.Logger;
-
-import javax.ejb.Stateless;
-import javax.enterprise.inject.Default;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-
-import bean.UserBean;
-import utils.MailUtil;
-import utils.PasswordUtil;
+import domain.EmailReset;
 import domain.TokenResponse;
 import domain.User;
 import filter.JWTTokenNeeded;
@@ -26,6 +9,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.jboss.resteasy.spi.HttpRequest;
 import utils.KeyGenerator;
+import utils.MailUtil;
+import utils.PasswordUtil;
+
+import javax.ejb.Stateless;
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Logger;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -36,9 +38,6 @@ import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 @Produces(APPLICATION_JSON)
 @Consumes(APPLICATION_JSON)
 public class UserService {
-    @Inject
-    UserBean userBean;
-
     @Context
     private UriInfo uriInfo;
 
@@ -61,17 +60,10 @@ public class UserService {
     public Response authenticateUser(@FormParam("username") String username,
                                      @FormParam("password") String password) {
         try {
-            // Authenticate the user using the credentials provided
             String id = authenticate(username, password);
-
-            // Issue a token for the user
             String token = issueToken(username, id);
-
             TokenResponse tokenResponse = new TokenResponse(token);
 
-            mailUtil.send("rus.min96@yandex.ru", "Re", "Re");
-
-            // Return the token on the response
             return Response.ok(tokenResponse).build();
         } catch (Exception e) {
             return Response.status(UNAUTHORIZED).build();
@@ -113,7 +105,10 @@ public class UserService {
             String userPassword = user.getPassword();
             user.setPassword(PasswordUtil.getSaltedHash(userPassword));
 
+            //TODO: add email check or unique attr to email on db
             entityManager.persist(user);
+
+            mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
 
             String id = String.valueOf(user.getId());
             return Response.created(
@@ -136,11 +131,51 @@ public class UserService {
         return Response.ok(user).build();
     }
 
-    @DELETE
-    @Path("/{id}")
-    public Response remove(@PathParam("id") String id) {
-        entityManager.remove(entityManager.getReference(User.class, id));
+    @POST
+    @Path("/reset")
+    public Response sendResetEmail(EmailReset email) {
+        TypedQuery<User> query = entityManager.createNamedQuery(User.FIND_USER_WITH_EMAIL, User.class);
+        query.setParameter("email", email.getEmail());
+
+        User user = query.getResultList().get(0);
+        if(user != null) {
+            String token = issueToken(user.getUsername(), String.valueOf(user.getId()));
+
+            mailUtil.sendResetPassword(user.getEmail(), user.getUsername(), token);
+
+            return Response.ok().build();
+        }
+
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/resetPassword")
+    @JWTTokenNeeded
+    @Consumes(APPLICATION_FORM_URLENCODED)
+    public Response resetPassword(@Context HttpRequest request, @FormParam("newPassword") String newPassword) {
+        try {
+            Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER_ID);
+            User user = entityManager.find(User.class, id);
+            user.setPassword(PasswordUtil.getSaltedHash(newPassword));
+            entityManager.persist(user);
+
+            return Response.ok().build();
+        } catch (Exception ex) {
+            return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path("/activateUser")
+    @JWTTokenNeeded
+    public Response activateAccount(@Context HttpRequest request) {
+        //TODO: закончить метод
+        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER_ID);
+        User user = entityManager.find(User.class, id);
+        entityManager.persist(user);
+
+        return Response.ok().build();
     }
 
     private Date toDate(LocalDateTime localDateTime) {

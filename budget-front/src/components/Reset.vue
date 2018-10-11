@@ -3,6 +3,7 @@
     <v-container class="md-content">
       <v-card row class="text-xs-center">
         <div class="centered-container">
+          <!--TODO:Добавить валидацию email-->
           <v-flex>
             <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
             <div class="form">
@@ -32,15 +33,20 @@
     name: "Reset",
     data() {
       return {
+        loading: false,
         email: ""
       }
     },
-    components: {
-      VueRecaptcha
-    },
+    components: {VueRecaptcha},
     methods: {
       reset() {
+        this.loading = true;
 
+        this.$http.post('users/reset', {email: this.email})
+          .then(response => {
+            this.loading = false;
+            this.$route.push('/');
+          })
       }
     }
   }

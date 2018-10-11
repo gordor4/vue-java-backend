@@ -12,16 +12,20 @@ import javax.xml.bind.annotation.XmlType;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "FIND_USER", query = "Select usr from User usr WHERE usr.username = :username"),
-		@NamedQuery(name = "FIND_ALL", query = "Select usr from User usr")
+		@NamedQuery(name = "FIND_ALL", query = "Select usr from User usr"),
+		@NamedQuery(name = "FIND_USER_WITH_EMAIL", query = "Select usr from User usr WHERE usr.email = :email")
 })
 public class User
 {
+	//TODO: Привести к актуальному состоянию таблицы в бд
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	public static final String FIND_USER = "FIND_USER";
 	public static final String FIND_ALL = "FIND_ALL";
+	public static final String FIND_USER_WITH_EMAIL = "FIND_USER_WITH_EMAIL";
 
 	@Column(name = "username")
 	@XmlAttribute
