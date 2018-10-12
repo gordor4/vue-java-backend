@@ -1,14 +1,13 @@
 package app;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-
 import filter.JWTTokenNeededFilter;
 import service.BudgetRestService;
 import service.UserService;
+
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @ApplicationPath("/api")
@@ -21,6 +20,7 @@ public class RestApplication extends Application
 		classes.add(UserService.class);
 		classes.add(BudgetRestService.class);
 		classes.add(JWTTokenNeededFilter.class);
+		classes.add(AppConfiguration.class);
 	}
 
 	@Override

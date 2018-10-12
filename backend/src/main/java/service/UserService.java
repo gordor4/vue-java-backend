@@ -12,6 +12,7 @@ import utils.KeyGenerator;
 import utils.MailUtil;
 import utils.PasswordUtil;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
@@ -41,7 +42,7 @@ public class UserService {
     @Context
     private UriInfo uriInfo;
 
-    @Inject
+    @EJB
     private MailUtil mailUtil;
 
     @Inject
@@ -102,13 +103,18 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(User user) {
         try {
+            System.out.println("Register user");
             String userPassword = user.getPassword();
             user.setPassword(PasswordUtil.getSaltedHash(userPassword));
 
             //TODO: add email check or unique attr to email on db
             entityManager.persist(user);
 
-            mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
+
+            System.out.println("Before send email");
+            //mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
+
+            System.out.println("After send email");
 
             String id = String.valueOf(user.getId());
             return Response.created(
