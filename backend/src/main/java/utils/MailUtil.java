@@ -45,7 +45,6 @@ public class MailUtil {
 
 
     public void sendEmailActivation(String email, String account) {
-        System.out.println("Start send email");
         String text = String.format(ACTIVATION_EMAIL_TEXT, account, config.getHostEnvironment());
         send(email, ACTIVATION_EMAIL_SUBJECT, text);
     }

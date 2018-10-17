@@ -106,13 +106,16 @@ public class UserService {
             System.out.println("Register user");
             String userPassword = user.getPassword();
             user.setPassword(PasswordUtil.getSaltedHash(userPassword));
+            user.setCreationDate(new Date());
+            user.setActivated(false);
+            user.setBanned(false);
 
             //TODO: add email check or unique attr to email on db
             entityManager.persist(user);
 
 
             System.out.println("Before send email");
-            //mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
+            mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
 
             System.out.println("After send email");
 

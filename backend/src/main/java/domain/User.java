@@ -5,9 +5,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
+import java.util.Date;
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "user", propOrder = {"id", "username", "password", "email"})
 @Table(name = "user", schema = "public")
 @Entity
 @NamedQueries({
@@ -17,8 +16,6 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class User
 {
-	//TODO: Привести к актуальному состоянию таблицы в бд
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
@@ -39,43 +36,124 @@ public class User
 	@XmlAttribute
 	private String email;
 
-	public int getId()
-	{
+	private boolean activated;
+	private boolean banned;
+
+	@Column(name = "creation_date")
+	@Temporal(TemporalType.DATE)
+	private Date creationDate;
+
+	@OneToOne
+	@JoinColumn(name="id")
+	private Avatar avatar;
+
+	@Column(name = "first_name")
+	private String firstName;
+
+	@Column(name = "last_name")
+	private String lastName;
+
+	@Column(name = "second_name")
+	private String secondName;
+
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(int id)
-	{
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getUsername()
-	{
+	public static String getFindUser() {
+		return FIND_USER;
+	}
+
+	public static String getFindAll() {
+		return FIND_ALL;
+	}
+
+	public static String getFindUserWithEmail() {
+		return FIND_USER_WITH_EMAIL;
+	}
+
+	public String getUsername() {
 		return username;
 	}
 
-	public void setUsername(String username)
-	{
+	public void setUsername(String username) {
 		this.username = username;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password)
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getEmail()
-	{
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
+	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public boolean isActivated() {
+		return activated;
+	}
+
+	public void setActivated(boolean activated) {
+		this.activated = activated;
+	}
+
+	public boolean isBanned() {
+		return banned;
+	}
+
+	public void setBanned(boolean banned) {
+		this.banned = banned;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getSecondName() {
+		return secondName;
+	}
+
+	public void setSecondName(String secondName) {
+		this.secondName = secondName;
 	}
 }

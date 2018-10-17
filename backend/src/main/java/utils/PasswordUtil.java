@@ -6,8 +6,8 @@ import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Base64;
 
 public class PasswordUtil {
-    private static final int iterations = 20*1000;
-    private static final int saltLen = 32;
+    private static final int iterations = 1000;
+    private static final int saltLen = 16;
     private static final int desiredKeyLen = 256;
 
     public static String getSaltedHash(String password) throws Exception {
