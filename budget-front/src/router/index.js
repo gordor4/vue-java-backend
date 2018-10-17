@@ -5,6 +5,7 @@ import Register from '@/components/Register'
 import Index from '@/components/Index'
 import Reset from '@/components/Reset'
 import ResetPassword from '@/components/ResetPassword'
+import Profile from '@/views/Profile'
 
 Vue.use(Router);
 
@@ -25,7 +26,14 @@ export default new Router({
     {
       path: '/index',
       name: 'Index',
-      component: Index
+      component: Index,
+      children: [
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile
+        }
+      ]
     },
     {
       path: '/reset',

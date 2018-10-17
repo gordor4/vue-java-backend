@@ -1,35 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-navigation-drawer fixed :clipped="$vuetify.breakpoint.mdAndUp" app v-model="drawer">
-        <v-list dense>
-          <v-layout ma-3 row align-center>
-            <v-avatar :size="avatarSize" color="grey lighten-4">
-              <img src="../assets/logo.png" alt="avatar">
-            </v-avatar>
-            <span class="ml-3">{{user.username}}</span>
-          </v-layout>
-          <template v-for="item in items">
-            <v-layout row v-if="item.heading" align-center :key="item.heading">
-              <v-flex xs6>
-                <v-subheader v-if="item.heading">
-                  {{ item.heading }}
-                </v-subheader>
-              </v-flex>
-            </v-layout>
-            <v-list-tile v-else @click="router_push(item.route)" :key="item.text">
-              <v-list-tile-action>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title>
-                  {{ item.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </template>
-        </v-list>
-      </v-navigation-drawer>
+      <navigation :drawer="drawer"></navigation>
       <v-toolbar color="blue darken-3" dark app :clipped-left="$vuetify.breakpoint.mdAndUp" fixed>
         <v-toolbar-title class="ml-0 pl-3">
           <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -44,105 +16,23 @@
           <v-icon>notifications</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-content>
-        <v-container fluid fill-height>
-
-        </v-container>
-      </v-content>
-      <v-btn fab bottom right color="pink" dark fixed @click.stop="dialog = !dialog">
-        <v-icon>add</v-icon>
-      </v-btn>
-      <v-dialog v-model="dialog" width="800px">
-        <v-card>
-          <v-card-title class="grey lighten-4 py-4 title">Create contact
-          </v-card-title>
-          <v-container grid-list-sm class="pa-4">
-            <v-layout row wrap>
-              <v-flex xs12 align-center justify-space-between>
-                <v-layout align-center>
-                  <v-avatar size="40px" class="mr-3">
-                    <img
-                      src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                      alt=""
-                    >
-                  </v-avatar>
-                  <v-text-field
-                    placeholder="Name"
-                  ></v-text-field>
-                </v-layout>
-              </v-flex>
-              <v-flex xs6>
-                <v-text-field
-                  prepend-icon="business"
-                  placeholder="Company"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs6>
-                <v-text-field
-                  placeholder="Job title"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field
-                  prepend-icon="mail"
-                  placeholder="Email"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field type="tel" prepend-icon="phone" placeholder="(000) 000 - 0000"
-                              mask="phone"></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field prepend-icon="notes" placeholder="Notes"></v-text-field>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <v-card-actions>
-            <v-btn flat color="primary">More</v-btn>
-            <v-spacer></v-spacer>
-            <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-            <v-btn flat @click="dialog = false">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <v-container>
+        <router-view></router-view>
+      </v-container>
     </v-app>
   </div>
 </template>
 
 <script>
+  import Navigation from "./Navigation";
+
   export default {
     name: "Index",
+    components: {Navigation},
     data() {
       return {
-        dialog: false,
-        drawer: null,
-        items: [
-          {icon: 'settings', text: 'Настройки'},
-          {icon: 'help', text: 'Помощь'},
-          {icon: 'phonelink', text: 'Скачать приложение'},
-          {icon: 'settings_power', text: 'Выйти', route: '/'}
-        ],
-        avatarSize: '50px'
+        drawer: null
       }
-    },
-    methods: {
-      logout() {
-        this.$cookie.delete('token')
-      },
-      router_push(route) {
-        if (route === '/') {
-          this.logout()
-        }
-        this.$router.push(route)
-      }
-    },
-    computed: {
-      user() {
-        return this.$store.getters.getUser
-      }
-    },
-    created() {
-      this.$store.dispatch('loadUserData')
     }
   }
 </script>

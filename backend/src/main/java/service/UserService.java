@@ -134,8 +134,11 @@ public class UserService {
     @Path("/get")
     @JWTTokenNeeded
     public Response findUser(@Context HttpRequest request) {
-        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER_ID);
-        User user = entityManager.find(User.class, id);
+        String username = (String)request.getAttribute(JWTTokenNeededFilter.USER);
+        TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
+        query.setParameter("username", username);
+
+        User user = (User)query.getSingleResult();
 
         return Response.ok(user).build();
     }
@@ -164,8 +167,12 @@ public class UserService {
     @Consumes(APPLICATION_FORM_URLENCODED)
     public Response resetPassword(@Context HttpRequest request, @FormParam("newPassword") String newPassword) {
         try {
-            Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER_ID);
-            User user = entityManager.find(User.class, id);
+            String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
+
+            TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
+            query.setParameter("username", username);
+
+            User user = (User)query.getSingleResult();
             user.setPassword(PasswordUtil.getSaltedHash(newPassword));
             entityManager.persist(user);
 
@@ -180,7 +187,7 @@ public class UserService {
     @JWTTokenNeeded
     public Response activateAccount(@Context HttpRequest request) {
         //TODO: закончить метод
-        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER_ID);
+        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
         User user = entityManager.find(User.class, id);
         entityManager.persist(user);
 

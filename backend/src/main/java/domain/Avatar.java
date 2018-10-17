@@ -10,6 +10,7 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @Column(name = "img_binary")
     private String binary;
 
     public int getId() {

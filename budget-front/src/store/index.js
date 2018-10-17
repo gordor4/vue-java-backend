@@ -4,6 +4,8 @@ import axios from '../http/axios'
 
 Vue.use(Vuex);
 
+//TODO: add drawer state
+
 export default new Vuex.Store({
   getters: {
     getUser: state => state.user
