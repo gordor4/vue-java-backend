@@ -8,24 +8,29 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   getters: {
-    getUser: state => state.user
+    getUser: state => state.user,
+    getNavState: state => state.navigationShow
   },
   state: {
     user: {
       username: 'Username',
       avatar: '',
-      full_name: ''
-    }
+      firstName: '',
+      lastName: '',
+      secondName: ''
+    },
+    navigationShow: false
   },
   actions: {
+    toggleNavBar(context, value) {
+      context.commit('setNavBar', value)
+    },
     loadUserData(context) {
-      console.log('start download user data');
       axios.post('users/get', {
         headers: {
           'Content-Type': 'application/json',
         }})
         .then(response => {
-          console.log(response.data)
           context.commit('setUser', response.data)
         })
         .catch(reason => console.log(reason))
@@ -35,6 +40,9 @@ export default new Vuex.Store({
     setUser(state, user) {
       console.log(user);
       state.user = user
+    },
+    setNavBar(state, value) {
+      state.navigationShow = value
     }
   }
 });

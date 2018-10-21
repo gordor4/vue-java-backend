@@ -1,17 +1,21 @@
 package service;
 
 import domain.EmailReset;
+import domain.ProfileUser;
 import domain.TokenResponse;
 import domain.User;
 import filter.JWTTokenNeeded;
 import filter.JWTTokenNeededFilter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.spi.HttpRequest;
 import utils.KeyGenerator;
 import utils.MailUtil;
 import utils.PasswordUtil;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.inject.Default;
@@ -24,10 +28,18 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
@@ -52,7 +64,19 @@ public class UserService {
     @PersistenceContext(unitName = "postgres")
     private EntityManager entityManager;
 
+    private byte[] defaultAvatar;
+
     private Logger logger = Logger.getLogger("UserService");
+
+    @PostConstruct
+    private void readDefaultAvatar() {
+        try {
+            InputStream avatarStream = this.getClass().getResourceAsStream("/META-INF/avatar.jpg");
+            defaultAvatar = IOUtils.toByteArray(avatarStream);
+        } catch (IOException ex) {
+            logger.log(Level.WARNING, "Can't find default avatar");
+        }
+    }
 
     @POST
     @Path("/login")
@@ -140,7 +164,9 @@ public class UserService {
 
         User user = (User)query.getSingleResult();
 
-        return Response.ok(user).build();
+        ProfileUser userResponse = new ProfileUser(user, Base64.encodeBase64String(defaultAvatar));
+
+        return Response.ok(userResponse).build();
     }
 
     @POST
@@ -190,6 +216,17 @@ public class UserService {
         Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
         User user = entityManager.find(User.class, id);
         entityManager.persist(user);
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/uploadUserPhoto")
+    @JWTTokenNeeded
+    public Response uploadPhoto(@Context HttpRequest request) {
+        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
+        User user = entityManager.find(User.class, id);
+
 
         return Response.ok().build();
     }

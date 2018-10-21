@@ -43,7 +43,7 @@ public class User
 	@Temporal(TemporalType.DATE)
 	private Date creationDate;
 
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="id")
 	private Avatar avatar;
 

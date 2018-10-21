@@ -1,9 +1,9 @@
 <template>
-  <v-navigation-drawer fixed :clipped="$vuetify.breakpoint.mdAndUp" app v-model="showDrawer">
+  <v-navigation-drawer :clipped="$vuetify.breakpoint.mdAndUp" absolute temporary :value="showDrawer">
     <v-list dense>
       <v-layout ma-3 row align-center>
         <v-avatar :size="avatarSize" color="grey lighten-4">
-          <img src="../assets/logo.png" alt="avatar">
+          <img :src=userAvatar()>
         </v-avatar>
         <span class="ml-3">{{user.username}}</span>
       </v-layout>
@@ -36,7 +36,7 @@
     data() {
       return {
         dialog: false,
-        avatarSize: '50px',
+        avatarSize: '46px',
         items: [
           {icon: 'settings', text: 'Настройки'},
           {icon: 'help', text: 'Помощь'},
@@ -46,21 +46,24 @@
         ]
       }
     },
-    props: ['drawer'],
     methods: {
       logout() {
         this.$cookie.delete('token')
       },
       router_push(route) {
+        this.$store.dispatch('toggleNavBar', false)
         if (route === '/') {
           this.logout()
         }
         this.$router.push(route)
+      },
+      userAvatar() {
+        return 'data:image/jpg;base64,' + this.user.avatar
       }
     },
     computed: {
       showDrawer() {
-        return this.$props.drawer
+        return this.$store.getters.getNavState
       },
       user() {
         return this.$store.getters.getUser
