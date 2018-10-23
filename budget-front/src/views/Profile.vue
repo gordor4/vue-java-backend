@@ -20,11 +20,19 @@
               text-xs-center
             >
               <v-avatar
-                :size="100"
+                :size="190"
                 color="grey lighten-4"
+                @click="pickFile"
               >
                 <img :src=userAvatar()>
               </v-avatar>
+              <input
+                type="file"
+                style="display: none"
+                ref="image"
+                accept="image/*"
+                @change="onFilePicked"
+              >
             </v-flex>
             <v-flex xs12 sm9 md8>
               <v-text-field v-model="user.firstName" label="Фамилия"></v-text-field>
@@ -66,6 +74,36 @@
     methods: {
       userAvatar() {
         return 'data:image/jpg;base64,' + this.userStore.avatar
+      },
+      pickFile() {
+        this.$refs.image.click()
+      },
+      onFilePicked(e) {
+        const files = e.target.files
+        if (files[0] !== undefined) {
+          this.imageName = files[0].name;
+          if (this.imageName.lastIndexOf('.') <= 0) {
+            return
+          }
+          const fr = new FileReader();
+          fr.readAsDataURL(files[0]);
+          fr.addEventListener('load', () => {
+            this.imageUrl = fr.result;
+            this.imageFile = files[0];
+
+            this.uploadAvatar(files[0])
+          })
+        }
+      },
+      uploadAvatar(photo) {
+        this.$http.post('users/uploadUserPhoto',
+          photo,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then()
+          .catch()
       }
     },
     created() {

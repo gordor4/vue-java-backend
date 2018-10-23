@@ -1,15 +1,14 @@
 package service;
 
-import domain.EmailReset;
-import domain.ProfileUser;
-import domain.TokenResponse;
-import domain.User;
+import domain.*;
 import filter.JWTTokenNeeded;
 import filter.JWTTokenNeededFilter;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 import utils.KeyGenerator;
 import utils.MailUtil;
@@ -24,26 +23,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import javax.ws.rs.core.*;
+import java.io.*;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @Stateless
@@ -222,13 +213,58 @@ public class UserService {
 
     @POST
     @Path("/uploadUserPhoto")
+    @Consumes(MULTIPART_FORM_DATA)
     @JWTTokenNeeded
-    public Response uploadPhoto(@Context HttpRequest request) {
+    public Response uploadPhoto(@Context HttpRequest request, MultipartFormDataInput input) {
         Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
         User user = entityManager.find(User.class, id);
 
+        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+        List<InputPart> inputParts = uploadForm.get("uploadedFile");
+
+        StringBuilder binaryString = new StringBuilder();
+
+        for (InputPart inputPart : inputParts) {
+            try {
+                InputStream inputStream = inputPart.getBody(InputStream.class,null);
+                byte[] bytes = IOUtils.toByteArray(inputStream);
+                for(byte b : bytes) {
+                    binaryString.append(b);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Avatar avatar = new Avatar();
+        avatar.setBinary(binaryString.toString());
+        user.setAvatar(avatar);
 
         return Response.ok().build();
+    }
+
+    private byte[] appendByteArray(byte[] a, byte[] b) {
+        byte[] result = new byte[a.length + b.length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+
+        return result;
+    }
+
+    private String getFileName(MultivaluedMap<String, String> header) {
+
+        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
+
+        for (String filename : contentDisposition) {
+            if ((filename.trim().startsWith("filename"))) {
+
+                String[] name = filename.split("=");
+
+                String finalFileName = name[1].trim().replaceAll("\"", "");
+                return finalFileName;
+            }
+        }
+        return "unknown";
     }
 
     private Date toDate(LocalDateTime localDateTime) {

@@ -38,6 +38,7 @@
         dialog: false,
         avatarSize: '46px',
         items: [
+          {icon: 'dashboard', text: 'Мои доски', route:'/index/dashboard'},
           {icon: 'settings', text: 'Настройки'},
           {icon: 'help', text: 'Помощь'},
           {icon: 'phonelink', text: 'Скачать приложение'},
