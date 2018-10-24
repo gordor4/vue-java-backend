@@ -240,31 +240,9 @@ public class UserService {
         avatar.setBinary(binaryString.toString());
         user.setAvatar(avatar);
 
+        entityManager.persist(user);
+
         return Response.ok().build();
-    }
-
-    private byte[] appendByteArray(byte[] a, byte[] b) {
-        byte[] result = new byte[a.length + b.length];
-        System.arraycopy(a, 0, result, 0, a.length);
-        System.arraycopy(b, 0, result, a.length, b.length);
-
-        return result;
-    }
-
-    private String getFileName(MultivaluedMap<String, String> header) {
-
-        String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-
-        for (String filename : contentDisposition) {
-            if ((filename.trim().startsWith("filename"))) {
-
-                String[] name = filename.split("=");
-
-                String finalFileName = name[1].trim().replaceAll("\"", "");
-                return finalFileName;
-            }
-        }
-        return "unknown";
     }
 
     private Date toDate(LocalDateTime localDateTime) {

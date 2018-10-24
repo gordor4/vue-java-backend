@@ -88,14 +88,12 @@
           const fr = new FileReader();
           fr.readAsDataURL(files[0]);
           fr.addEventListener('load', () => {
-            this.imageUrl = fr.result;
-            this.imageFile = files[0];
-
-            this.uploadAvatar(files[0])
+            this.uploadAvatar(fr.result)
           })
         }
       },
       uploadAvatar(photo) {
+        console.log(photo)
         this.$http.post('users/uploadUserPhoto',
           photo,
           {

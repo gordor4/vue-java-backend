@@ -6,6 +6,7 @@ import Index from '@/components/Index'
 import Reset from '@/components/Reset'
 import ResetPassword from '@/components/ResetPassword'
 import Profile from '@/views/Profile'
+import Dashboard from '@/views/Dashboard'
 
 Vue.use(Router);
 
@@ -32,6 +33,11 @@ export default new Router({
           path: 'profile',
           name: 'Profile',
           component: Profile
+        },
+        {
+          path: 'dashboard',
+          name: 'Dashboard',
+          component: Dashboard
         }
       ]
     },
