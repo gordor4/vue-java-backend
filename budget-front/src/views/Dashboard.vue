@@ -20,75 +20,104 @@
       <v-icon>add</v-icon>
     </v-btn>
 
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-dialog width="600" v-model="dialog" transition="dialog-bottom-transition">
+      <v-toolbar dark color="primary">
+        <v-btn icon dark @click.native="dialog = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-toolbar-title>Создание новой доски</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn dark flat @click.native="dialog = false">Создать</v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
       <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click.native="dialog = false">
-            <v-icon>close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Создание новой доски</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn dark flat @click.native="dialog = false">Создать</v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-
         <v-list three-line subheader>
           <v-subheader>Общая информация</v-subheader>
-          <v-layout row wrap px-3>
+          <v-layout>
+            <v-flex
+              px-4
+              xs12
+              sm12
+              md12
+              align-center
+              text-xs-center
+            >
+              <v-text-field v-model="newBoard.boardName" label="Название доски"></v-text-field>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
             <v-flex
               xs12
-              sm2
-              md3
+              sm12
+              md12
+              align-center
+              text-xs-center
+            >
+              <v-list-tile avatar>
+                <v-list-tile-action>
+                  <v-checkbox v-model="is_public"></v-checkbox>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                  <v-list-tile-title>Доступ по ссылке</v-list-tile-title>
+                  <v-list-tile-sub-title>Люди, у которых есть ссылка смогут просматривать доску</v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-flex>
+          </v-layout>
+
+          <v-layout>
+            <v-flex
+              xs12
+              sm12
+              md12
+              align-center
+              layout
+              text-xs-center
+            >
+              <v-list-tile avatar>
+                <v-list-tile-action>
+                  <v-checkbox v-model="is_public_edit"></v-checkbox>
+                </v-list-tile-action>
+                <v-list-tile-content>
+                  <v-list-tile-title>Редактирование</v-list-tile-title>
+                  <v-list-tile-sub-title>Люди, у которых есть ссылка смогут редактировать доску</v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-flex>
+          </v-layout>
+
+          <v-layout v-if="!is_public">
+            <v-flex
+              xs12
+              sm12
+              md12
               align-center
               layout
               text-xs-center
             >
               <v-list-tile avatar>
                 <v-list-tile-content>
-                  <v-list-tile-title>Название доски</v-list-tile-title>
-                  <v-list-tile-sub-title>Имя будут видеть все, кто имеет доступ к доске</v-list-tile-sub-title>
+                  <v-list-tile-title>Добавить людей</v-list-tile-title>
+                  <v-list-tile-sub-title>Люди, у которых есть доступ для просмотра доски</v-list-tile-sub-title>
                 </v-list-tile-content>
               </v-list-tile>
             </v-flex>
+          </v-layout>
+          <v-layout v-if="!is_public">
             <v-flex
               xs12
-              sm7
-              md6
-              align-center
-              layout
-            >
-              <v-text-field v-model="newBoard.boardName" label="Название доски"></v-text-field>
+              sm12
+              md12
+              align-center>
+
+              <v-chip v-for="user in available_users" close>{{user}}</v-chip>
+              <v-btn fab small dark color="indigo">
+                <v-icon dark @click="addUser">add</v-icon>
+              </v-btn>
             </v-flex>
           </v-layout>
-
-          <v-layout row wrap px-3>
-            <v-flex
-              xs12
-              sm2
-              md3
-              align-center
-              layout
-              text-xs-center
-            >
-              <v-list-tile avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Название доски</v-list-tile-title>
-                  <v-list-tile-sub-title>Имя будут видеть все, кто имеет доступ к доске</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-flex>
-            <v-flex
-              xs12
-              sm7
-              md6
-              align-center
-              layout
-            >
-              <v-text-field v-model="newBoard.boardName" label="Название доски"></v-text-field>
-            </v-flex>
-          </v-layout>
-
         </v-list>
       </v-card>
     </v-dialog>
@@ -102,15 +131,27 @@
       return {
         dashboards: null,
         dialog: false,
+        is_public: false,
+        is_public_edit: false,
+        available_users: [
+          'user1', 'user2', 'user3'
+        ],
         newBoard: {
           boardName: null
         }
       }
     },
+    methods: {
+      addUser() {
+        this.available_users.push('user')
+      }
+    },
     created() {
       this.$http.post('users/resetPassword', '')
-        .then(response => {})
-        .catch(error => {})
+        .then(response => {
+        })
+        .catch(error => {
+        })
     }
   }
 </script>
