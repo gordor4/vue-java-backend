@@ -111,8 +111,7 @@
               sm12
               md12
               align-center>
-
-              <v-chip v-for="user in available_users" close>{{user}}</v-chip>
+              <v-chip v-for="(user, index) in available_users" :key="index" @click="deleteUser(index)" close>{{user}}</v-chip>
               <v-btn fab small dark color="indigo">
                 <v-icon dark @click="addUser">add</v-icon>
               </v-btn>
@@ -144,14 +143,17 @@
     methods: {
       addUser() {
         this.available_users.push('user')
+      },
+      deleteUser(index) {
+        this.available_users.splice(index, 1)
       }
     },
     created() {
-      this.$http.post('users/resetPassword', '')
-        .then(response => {
-        })
-        .catch(error => {
-        })
+      // this.$http.post('users/resetPassword', '')
+      //   .then(response => {
+      //   })
+      //   .catch(error => {
+      //   })
     }
   }
 </script>
