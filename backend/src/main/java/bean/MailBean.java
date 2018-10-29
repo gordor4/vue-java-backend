@@ -1,4 +1,4 @@
-package utils;
+package bean;
 
 import app.AppConfiguration;
 
@@ -10,7 +10,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 @Stateless
-public class MailUtil {
+public class MailBean {
     @Resource(name = "java:jboss/mail/yamail")
     private Session session;
 

@@ -28,25 +28,24 @@
         <v-toolbar-title>Создание новой доски</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark flat @click.native="dialog = false">Создать</v-btn>
+          <v-btn dark flat @click.native="createBoard">Создать</v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <v-card>
         <v-list three-line subheader>
-          <v-subheader>Общая информация</v-subheader>
           <v-layout>
             <v-flex
               px-4
+              pt-3
               xs12
               sm12
               md12
               align-center
               text-xs-center
             >
-              <v-text-field v-model="newBoard.boardName" label="Название доски"></v-text-field>
+              <v-text-field v-model="board.boardName" label="Название доски"></v-text-field>
             </v-flex>
           </v-layout>
-
           <v-layout>
             <v-flex
               xs12
@@ -57,7 +56,7 @@
             >
               <v-list-tile avatar>
                 <v-list-tile-action>
-                  <v-checkbox v-model="is_public"></v-checkbox>
+                  <v-checkbox v-model="board.isPublic"></v-checkbox>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title>Доступ по ссылке</v-list-tile-title>
@@ -78,7 +77,7 @@
             >
               <v-list-tile avatar>
                 <v-list-tile-action>
-                  <v-checkbox v-model="is_public_edit"></v-checkbox>
+                  <v-checkbox v-model="board.isPublicEdit"></v-checkbox>
                 </v-list-tile-action>
                 <v-list-tile-content>
                   <v-list-tile-title>Редактирование</v-list-tile-title>
@@ -87,8 +86,7 @@
               </v-list-tile>
             </v-flex>
           </v-layout>
-
-          <v-layout v-if="!is_public">
+          <v-layout v-if="!board.isPublic">
             <v-flex
               xs12
               sm12
@@ -105,19 +103,56 @@
               </v-list-tile>
             </v-flex>
           </v-layout>
-          <v-layout v-if="!is_public">
+          <v-layout v-if="!board.isPublic">
             <v-flex
               xs12
               sm12
               md12
               align-center>
-              <v-chip v-for="(user, index) in available_users" :key="index" @click="deleteUser(index)" close>{{user}}</v-chip>
+              <v-chip v-for="(user, index) in available_users" :key="index" @click="deleteUser(index)" close>{{user}}
+              </v-chip>
               <v-btn fab small dark color="indigo">
-                <v-icon dark @click="addUser">add</v-icon>
+                <v-icon dark @click="openNewUserDialog">add</v-icon>
               </v-btn>
             </v-flex>
           </v-layout>
         </v-list>
+      </v-card>
+    </v-dialog>
+
+    <v-dialog width="500" v-model="user_dialog">
+      <v-toolbar dark color="primary">
+        <v-btn icon dark @click.native="user_dialog = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-toolbar-title>Добавление пользователя</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-toolbar-items>
+          <v-btn dark flat @click.native="user_dialog = false">Добавить</v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+      <v-card>
+        <v-layout>
+          <v-flex
+            py-3
+            px-4
+            xs12
+            sm9
+            md9
+            align-center
+            text-xs-center
+          >
+            <v-text-field v-model="search_user" label="Имя пользователя / Почта"></v-text-field>
+          </v-flex>
+          <v-flex
+            py-4
+            px-3
+            xs12
+            sm3
+            md3>
+            <v-btn outline color="indigo">Найти</v-btn>
+          </v-flex>
+        </v-layout>
       </v-card>
     </v-dialog>
   </v-container>
@@ -130,17 +165,34 @@
       return {
         dashboards: null,
         dialog: false,
-        is_public: false,
-        is_public_edit: false,
-        available_users: [
-          'user1', 'user2', 'user3'
-        ],
-        newBoard: {
-          boardName: null
+        user_dialog: false,
+        search_user: null,
+        available_users: [],
+        board: {
+          boardName: null,
+          isPublic: false,
+          isPublicEdit: false,
         }
       }
     },
     methods: {
+      createBoard() {
+        this.dialog = false
+
+        this.$http.post('board/createBoard', {
+          "boardName": this.board.boardName,
+          "isPublic": this.board.isPublic,
+          "isPublicEdit": this.board.isPublicEdit
+        })
+          .then(response => {
+          })
+          .catch(error => {
+          })
+      },
+      openNewUserDialog() {
+        this.user_dialog = true
+
+      },
       addUser() {
         this.available_users.push('user')
       },

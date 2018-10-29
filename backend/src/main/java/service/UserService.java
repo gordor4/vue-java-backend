@@ -11,7 +11,7 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 import utils.KeyGenerator;
-import utils.MailUtil;
+import bean.MailBean;
 import utils.PasswordUtil;
 
 import javax.annotation.PostConstruct;
@@ -46,7 +46,7 @@ public class UserService {
     private UriInfo uriInfo;
 
     @EJB
-    private MailUtil mailUtil;
+    private MailBean mailBean;
 
     @Inject
     @Default
@@ -125,14 +125,9 @@ public class UserService {
             user.setActivated(false);
             user.setBanned(false);
 
-            //TODO: add email check or unique attr to email on db
             entityManager.persist(user);
 
-
-            System.out.println("Before send email");
-            mailUtil.sendEmailActivation(user.getEmail(), user.getUsername());
-
-            System.out.println("After send email");
+            mailBean.sendEmailActivation(user.getEmail(), user.getUsername());
 
             String id = String.valueOf(user.getId());
             return Response.created(
@@ -149,11 +144,11 @@ public class UserService {
     @Path("/get")
     @JWTTokenNeeded
     public Response findUser(@Context HttpRequest request) {
-        String username = (String)request.getAttribute(JWTTokenNeededFilter.USER);
+        String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
         TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
         query.setParameter("username", username);
 
-        User user = (User)query.getSingleResult();
+        User user = (User) query.getSingleResult();
 
         ProfileUser userResponse = new ProfileUser(user, Base64.encodeBase64String(defaultAvatar));
 
@@ -167,10 +162,10 @@ public class UserService {
         query.setParameter("email", email.getEmail());
 
         User user = query.getResultList().get(0);
-        if(user != null) {
+        if (user != null) {
             String token = issueToken(user.getUsername(), String.valueOf(user.getId()));
 
-            mailUtil.sendResetPassword(user.getEmail(), user.getUsername(), token);
+            mailBean.sendResetPassword(user.getEmail(), user.getUsername(), token);
 
             return Response.ok().build();
         }
@@ -189,7 +184,7 @@ public class UserService {
             TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
             query.setParameter("username", username);
 
-            User user = (User)query.getSingleResult();
+            User user = (User) query.getSingleResult();
             user.setPassword(PasswordUtil.getSaltedHash(newPassword));
             entityManager.persist(user);
 
@@ -197,6 +192,13 @@ public class UserService {
         } catch (Exception ex) {
             return Response.serverError().build();
         }
+    }
+
+    @POST
+    @Path("/findUser")
+    @JWTTokenNeeded
+    public Response getUser(User user) {
+        return Response.ok().build();
     }
 
     @POST
@@ -226,9 +228,9 @@ public class UserService {
 
         for (InputPart inputPart : inputParts) {
             try {
-                InputStream inputStream = inputPart.getBody(InputStream.class,null);
+                InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                for(byte b : bytes) {
+                for (byte b : bytes) {
                     binaryString.append(b);
                 }
             } catch (IOException e) {

@@ -25,15 +25,12 @@ public class User
 	public static final String FIND_USER_WITH_EMAIL = "FIND_USER_WITH_EMAIL";
 
 	@Column(name = "username")
-	@XmlAttribute
 	private String username;
 
 	@Column(name = "password")
-	@XmlAttribute
 	private String password;
 
 	@Column(name = "email")
-	@XmlAttribute
 	private String email;
 
 	private boolean activated;

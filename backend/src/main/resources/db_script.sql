@@ -32,20 +32,21 @@ create table "user" (
 	second_name VARCHAR(40)
 );
 
-CREATE INDEX ON user (username);
+CREATE INDEX ON "user"(username);
 
 create table "board" (
 	"id" int4 DEFAULT nextval('board_id_seq'::regclass) PRIMARY KEY,
-	owner_id int4 NOT NULL REFERENCES user(id),
+	owner_id int4 NOT NULL REFERENCES "user"(id),
   board_name text NOT NULL,
   is_public boolean NOT NULL DEFAULT false,
+  is_public_edit boolean NOT NULL DEFAULT false,
   creation_date date NOT NULL DEFAULT CURRENT_DATE
 );
 
 create table board_permission (
   "id" int4 DEFAULT nextval('board_permission_id_seq'::regclass) PRIMARY KEY,
   board_id int4 references board(id),
-  user_id int4 references user(id),
+  user_id int4 references "user"(id),
   permission_read boolean default false,
   permission_edit boolean default false
 );

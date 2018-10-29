@@ -88,7 +88,6 @@
                   this.errorText = 'При авторизации произошла ошибка';
               }
               this.loading = false;
-
             });
         }
       }
