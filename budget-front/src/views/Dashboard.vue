@@ -1,11 +1,39 @@
 <template>
   <v-container v-bind="{ [`grid-list-$3`]: true }" fluid>
-    <v-layout row wrap>
+    <v-layout row wrap pt-4>
       <v-flex
-        v-for="n in 9"
-        :key="n"
+        v-for="dashboard in dashboards"
+        :key="dashboard.name"
         xs4
+        md4
+        lg4
+        my-2
+        pa-2
       >
+        <v-card>
+          <v-img
+            src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
+            aspect-ratio="2.75"
+          ></v-img>
+          <v-card-title>
+            <div>
+              <h3>{{dashboard.boardName}}</h3>
+              <div>{{dashboard.boardName}}</div>
+            </div>
+          </v-card-title>
+          <v-card-actions>
+            <v-btn flat icon v-if="dashboard.public" @click="showLinkDialog">
+              <v-icon>insert_link</v-icon>
+            </v-btn>
+            <v-btn flat icon v-if="!dashboard.public" @click="showLinkDialog">
+              <v-icon>add_person</v-icon>
+            </v-btn>
+            <v-btn flat icon>
+              <v-icon>settings</v-icon>
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+
       </v-flex>
     </v-layout>
     <v-btn
@@ -163,7 +191,7 @@
     name: "Dashboard",
     data() {
       return {
-        dashboards: null,
+        dashboards: [],
         dialog: false,
         user_dialog: false,
         search_user: null,
@@ -176,6 +204,14 @@
       }
     },
     methods: {
+      updateBoards() {
+        this.$http.post('board/getUserBoard')
+          .then(response => {
+            this.dashboards = response.data
+          })
+          .catch(error => {
+          })
+      },
       createBoard() {
         this.dialog = false;
 
@@ -188,6 +224,7 @@
           })
           .catch(error => {
           })
+          .finally(() => this.updateBoards())
       },
       openNewUserDialog() {
         this.user_dialog = true
@@ -198,14 +235,13 @@
       },
       deleteUser(index) {
         this.available_users.splice(index, 1)
+      },
+      showLinkDialog() {
+        //TODO: добавить доступ по ссылке
       }
     },
     created() {
-      // this.$http.post('users/resetPassword', '')
-      //   .then(response => {
-      //   })
-      //   .catch(error => {
-      //   })
+      this.updateBoards()
     }
   }
 </script>

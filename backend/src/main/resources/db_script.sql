@@ -38,6 +38,7 @@ create table "board" (
 	"id" int4 DEFAULT nextval('board_id_seq'::regclass) PRIMARY KEY,
 	owner_id int4 NOT NULL REFERENCES "user"(id),
   board_name text NOT NULL,
+  board_description text NOT NULL,
   is_public boolean NOT NULL DEFAULT false,
   is_public_edit boolean NOT NULL DEFAULT false,
   creation_date date NOT NULL DEFAULT CURRENT_DATE

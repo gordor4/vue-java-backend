@@ -2,10 +2,12 @@ package domain;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 @Table(name = "board", schema = "public")
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Board.GET_USER_BOARD, query = "Select b from Board b WHERE b.ownerId = :user")
+})
 public class Board {
 
     @Id
@@ -19,6 +21,9 @@ public class Board {
     @Column(name = "board_name")
     private String boardName;
 
+    @Column(name = "board_description")
+    private String boardDescription;
+
     @Column(name = "is_public")
     private Boolean isPublic;
 
@@ -29,14 +34,17 @@ public class Board {
     @Temporal(TemporalType.DATE)
     private Date creationDate;
 
+    @Column(name = "owner_id")
+    private int ownerId;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private List<BoardPermission> boardPermissions;
+    public static final String GET_USER_BOARD = "user boards";
+    public static final String USER_PARAM = "user";
 
-    public int getId() {
-        return id;
-    }
+//    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id")
+//    private List<BoardPermission> boardPermissions;
+
+    public int getId() { return id; }
 
     public void setId(int id) {
         this.id = id;
@@ -82,11 +90,40 @@ public class Board {
         isPublicEdit = publicEdit;
     }
 
-    public List<BoardPermission> getBoardPermissions() {
-        return boardPermissions;
+//    public List<BoardPermission> getBoardPermissions() {
+//        return boardPermissions;
+//    }
+//
+//    public void setBoardPermissions(List<BoardPermission> boardPermissions) {
+//        this.boardPermissions = boardPermissions;
+//    }
+
+
+    public String getBoardDescription() {
+        return boardDescription;
     }
 
-    public void setBoardPermissions(List<BoardPermission> boardPermissions) {
-        this.boardPermissions = boardPermissions;
+    public void setBoardDescription(String boardDescription) {
+        this.boardDescription = boardDescription;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public Boolean getPublicEdit() {
+        return isPublicEdit;
+    }
+
+    public int getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -19,6 +19,12 @@
                 <router-link to="/reset">Восстановить пароль</router-link>
               </div>
               <div class="md-layout mb-3">
+                Войти с помощью:
+              </div>
+              <div class="md-layout mb-3">
+                <img :src="require('../assets/google.svg')" />
+              </div>
+              <div class="md-layout mb-3">
                 <router-link to="/register">Регистрация</router-link>
                 <v-btn @click="auth">Войти</v-btn>
               </div>
