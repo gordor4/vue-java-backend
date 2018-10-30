@@ -1,5 +1,7 @@
 package service;
 
+import bean.MailBean;
+import bean.UserBean;
 import domain.*;
 import filter.JWTTokenNeeded;
 import filter.JWTTokenNeededFilter;
@@ -11,7 +13,6 @@ import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.spi.HttpRequest;
 import utils.KeyGenerator;
-import bean.MailBean;
 import utils.PasswordUtil;
 
 import javax.annotation.PostConstruct;
@@ -23,18 +24,22 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.*;
-import javax.ws.rs.core.*;
-import java.io.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static javax.ws.rs.core.MediaType.*;
 import static org.ietf.jgss.GSSException.UNAUTHORIZED;
 
 @Stateless
@@ -51,6 +56,9 @@ public class UserService {
     @Inject
     @Default
     private KeyGenerator keyGenerator;
+
+    @Inject
+    private UserBean userBean;
 
     @PersistenceContext(unitName = "postgres")
     private EntityManager entityManager;
@@ -87,9 +95,7 @@ public class UserService {
     }
 
     private String authenticate(String login, String password) throws Exception {
-        TypedQuery<User> query = entityManager.createNamedQuery(User.FIND_USER, User.class);
-        query.setParameter("username", login);
-        User user = query.getSingleResult();
+        User user = userBean.findUser(login);
 
         if (user == null || !PasswordUtil.check(password, user.getPassword()))
             throw new SecurityException("Invalid user/password");
@@ -118,7 +124,6 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(User user) {
         try {
-            System.out.println("Register user");
             String userPassword = user.getPassword();
             user.setPassword(PasswordUtil.getSaltedHash(userPassword));
             user.setCreationDate(new Date());
@@ -126,7 +131,6 @@ public class UserService {
             user.setBanned(false);
 
             entityManager.persist(user);
-
             mailBean.sendEmailActivation(user.getEmail(), user.getUsername());
 
             String id = String.valueOf(user.getId());
@@ -144,11 +148,7 @@ public class UserService {
     @Path("/get")
     @JWTTokenNeeded
     public Response findUser(@Context HttpRequest request) {
-        String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
-        TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
-        query.setParameter("username", username);
-
-        User user = (User) query.getSingleResult();
+        User user = userBean.findUser(request);
 
         ProfileUser userResponse = new ProfileUser(user, Base64.encodeBase64String(defaultAvatar));
 
@@ -164,7 +164,6 @@ public class UserService {
         User user = query.getResultList().get(0);
         if (user != null) {
             String token = issueToken(user.getUsername(), String.valueOf(user.getId()));
-
             mailBean.sendResetPassword(user.getEmail(), user.getUsername(), token);
 
             return Response.ok().build();
@@ -179,12 +178,7 @@ public class UserService {
     @Consumes(APPLICATION_FORM_URLENCODED)
     public Response resetPassword(@Context HttpRequest request, @FormParam("newPassword") String newPassword) {
         try {
-            String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
-
-            TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
-            query.setParameter("username", username);
-
-            User user = (User) query.getSingleResult();
+            User user = userBean.findUser(request);
             user.setPassword(PasswordUtil.getSaltedHash(newPassword));
             entityManager.persist(user);
 
@@ -197,8 +191,9 @@ public class UserService {
     @POST
     @Path("/findUser")
     @JWTTokenNeeded
-    public Response getUser(User user) {
-        return Response.ok().build();
+    public Response getUser(User userParam) {
+        User user = userBean.findUser(userParam.getUsername());
+        return Response.ok(user).build();
     }
 
     @POST
@@ -206,8 +201,12 @@ public class UserService {
     @JWTTokenNeeded
     public Response activateAccount(@Context HttpRequest request) {
         //TODO: закончить метод
-        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
-        User user = entityManager.find(User.class, id);
+        String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
+
+        TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
+        query.setParameter("username", username);
+
+        User user = (User) query.getSingleResult();
         entityManager.persist(user);
 
         return Response.ok().build();

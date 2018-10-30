@@ -74,11 +74,11 @@ public class Board {
         this.creationDate = creationDate;
     }
 
-    public boolean isPublicEdit() {
+    public Boolean isPublicEdit() {
         return isPublicEdit;
     }
 
-    public void setPublicEdit(boolean publicEdit) {
+    public void setPublicEdit(Boolean publicEdit) {
         isPublicEdit = publicEdit;
     }
 

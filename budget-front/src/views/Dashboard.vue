@@ -177,7 +177,7 @@
     },
     methods: {
       createBoard() {
-        this.dialog = false
+        this.dialog = false;
 
         this.$http.post('board/createBoard', {
           "boardName": this.board.boardName,
