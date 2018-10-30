@@ -11,11 +11,12 @@ public class AppConfiguration {
 
     @PostConstruct
     private void setEnvironment() {
-        environment = Env.DEV;
+        environment = Env.SITE;
     }
 
     private enum Env {
         LOCAL("http://localhost:8080/rest-1.0-SNAPSHOT/api"),
+        SITE("http://site.gordor.host"),
         DEV("http://gordor.host/rest/api");
 
         private final String text;

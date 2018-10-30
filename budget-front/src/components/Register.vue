@@ -23,6 +23,9 @@
               </div>
             </v-flex>
           </v-form>
+          <v-alert v-if="errorText" :value="true" type="error">
+            {{errorText}}
+          </v-alert>
         </div>
       </v-card>
     </v-container>
@@ -34,6 +37,7 @@
     name: "Register",
     data() {
       return {
+        errorText: null,
         loading: false,
         user: {
           username: "",
@@ -69,7 +73,7 @@
             })
             .catch(error => {
               this.loading = false;
-              console.log(error);
+              this.errorText = 'Ошибка при регистрации'
             });
         }
       }

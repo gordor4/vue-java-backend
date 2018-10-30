@@ -20,7 +20,7 @@
               text-xs-center
             >
               <v-avatar
-                :size="190"
+                :size="220"
                 color="grey lighten-4"
                 @click="pickFile"
               >
@@ -34,16 +34,19 @@
                 @change="onFilePicked"
               >
             </v-flex>
-            <v-flex xs12 sm9 md8>
-              <v-text-field v-model="user.firstName" label="Фамилия"></v-text-field>
-              <v-text-field v-model="user.lastName" label="Имя"></v-text-field>
-              <v-text-field v-model="user.secondName" label="Отчество"></v-text-field>
+            <v-flex xs12 sm9 md8 pr-5>
+              <v-text-field v-model="user.firstName" outline label="Фамилия"></v-text-field>
+              <v-text-field v-model="user.lastName" outline label="Имя"></v-text-field>
+              <v-text-field v-model="user.secondName" outline label="Отчество"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout row wrap pa-3>
-            <v-btn block>
-              Сохранить
-            </v-btn>
+            <v-flex>
+              <v-btn outline>
+                Сохранить
+              </v-btn>
+            </v-flex>
+
           </v-layout>
         </v-card-text>
 
