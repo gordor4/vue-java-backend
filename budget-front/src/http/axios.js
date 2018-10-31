@@ -4,11 +4,14 @@ import router from '../router'
 
 
 let instance = axios.create({
-  baseURL: 'http://gordor.host/rest/api/',
-  // baseURL: 'http://localhost:8080/rest-1.0-SNAPSHOT/api/',
-  headers: {
-    'Authorization': 'Bearer ' + cookie.get('token')
-  }
+  baseURL: 'http://gordor.host/rest/api/'
+});
+
+instance.interceptors.request.use((config) => {
+  config.headers.Authorization = 'Bearer ' + cookie.get('token')
+  return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 instance.interceptors.response.use(null,
