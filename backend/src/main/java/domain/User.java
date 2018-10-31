@@ -34,7 +34,7 @@ public class User
 	private boolean banned;
 
 	@Column(name = "avatar_id")
-	private int avatarId;
+	private Integer avatarId;
 
 	@Column(name = "creation_date")
 	@Temporal(TemporalType.DATE)

@@ -52,8 +52,9 @@
         this.$cookie.delete('token')
       },
       router_push(route) {
-        this.$store.dispatch('toggleNavBar', false)
+        this.$store.dispatch('toggleNavBar', false);
         if (route === '/') {
+          this.$store.dispatch('clearUserData');
           this.logout()
         }
         this.$router.push(route)

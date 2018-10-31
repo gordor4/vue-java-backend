@@ -35,14 +35,23 @@ export default new Vuex.Store({
         })
         .catch(reason => console.log(reason))
     },
+    clearUserData(context) {
+      context.commit('clearUser')
+    }
   },
   mutations: {
     setUser(state, user) {
-      console.log(user);
       state.user = user
     },
     setNavBar(state, value) {
       state.navigationShow = value
+    },
+    clearUser(state) {
+      state.user.username = '';
+      state.user.avatar = '';
+      state.user.firstName = '';
+      state.user.lastName = '';
+      state.user.secondName = '';
     }
   }
 });

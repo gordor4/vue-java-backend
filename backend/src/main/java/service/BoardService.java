@@ -2,6 +2,7 @@ package service;
 
 import bean.UserBean;
 import domain.Board;
+import domain.BoardId;
 import domain.BoardParam;
 import domain.User;
 import filter.JWTTokenNeeded;
@@ -51,6 +52,22 @@ public class BoardService {
         entityManager.persist(board);
 
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("/deleteBoard")
+    @JWTTokenNeeded
+    public Response deleteBoard(@Context HttpRequest request, BoardId boardId) {
+        User user = userBean.findUser(request);
+        Board board = entityManager.find(Board.class, boardId.getId());
+
+        if(board.getOwnerId() == user.getId()) {
+            entityManager.remove(board);
+
+            return Response.ok().build();
+        } else {
+            return Response.notModified().build();
+        }
     }
 
     @POST

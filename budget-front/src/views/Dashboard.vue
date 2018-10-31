@@ -1,45 +1,43 @@
 <template>
-  <v-container v-bind="{ [`grid-list-$4`]: true }" fluid>
-    <v-layout row wrap pt-4>
-      <v-flex
-        v-for="dashboard in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>
-        <v-card>
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-            aspect-ratio="2.75">
-          </v-img>
-          <v-card-title>
-            <div>
-              <h3>{{dashboard.boardName}}</h3>
-              <div>{{dashboard.boardDescription}}</div>
-            </div>
-          </v-card-title>
-          <v-card-actions>
-            <v-btn flat icon v-if="dashboard.public" @click="showLinkDialog">
-              <v-icon>insert_link</v-icon>
-            </v-btn>
-            <v-btn flat icon v-if="!dashboard.public" @click="showLinkDialog">
-              <v-icon>person_add</v-icon>
-            </v-btn>
-            <v-btn flat icon>
-              <v-icon>settings</v-icon>
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+  <v-layout>
+    <v-container v-bind="{ [`grid-list-$4`]: true }" fluid>
+      <v-layout row wrap pt-4>
+        <v-flex
+          v-for="(dashboard , index) in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>
+          <v-card>
+            <v-img
+              src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
+              aspect-ratio="2.75">
+            </v-img>
+            <v-card-title>
+              <div>
+                <h3>{{dashboard.boardName}}</h3>
+                <div>{{dashboard.boardDescription}}</div>
+              </div>
+            </v-card-title>
+            <v-card-actions>
+              <v-btn flat icon v-if="dashboard.public" @click="showLinkDialog">
+                <v-icon>insert_link</v-icon>
+              </v-btn>
+              <v-btn flat icon v-if="!dashboard.public" @click="showLinkDialog">
+                <v-icon>person_add</v-icon>
+              </v-btn>
+              <v-btn flat icon>
+                <v-icon>settings</v-icon>
+              </v-btn>
+              <v-btn flat icon @click="deleteBoard(dashboard.id, index)">
+                <v-icon>delete</v-icon>
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn flat icon @click="">
+                <v-icon large>chevron_right</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-card>
 
-      </v-flex>
-    </v-layout>
-    <v-btn
-      color="pink"
-      fab
-      dark
-      fixed
-      bottom
-      right
-      @click="dialog = true"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
+        </v-flex>
+      </v-layout>
+    </v-container>
 
     <v-dialog width="600" v-model="dialog" transition="dialog-bottom-transition">
       <v-toolbar dark color="primary">
@@ -130,15 +128,7 @@
       </v-toolbar>
       <v-card>
         <v-layout>
-          <v-flex
-            py-3
-            px-4
-            xs12
-            sm9
-            md9
-            align-center
-            text-xs-center
-          >
+          <v-flex py-3 px-4 xs12 sm9 md9 align-center text-xs-center>
             <v-text-field v-model="search_user" label="Имя пользователя / Почта"></v-text-field>
           </v-flex>
           <v-flex
@@ -152,7 +142,19 @@
         </v-layout>
       </v-card>
     </v-dialog>
-  </v-container>
+
+    <v-btn
+      color="pink"
+      fab
+      dark
+      fixed
+      bottom
+      right
+      @click="dialog = true"
+    >
+      <v-icon>add</v-icon>
+    </v-btn>
+  </v-layout>
 </template>
 
 <script>
@@ -161,6 +163,7 @@
     data() {
       return {
         dashboards: [],
+        downloaded: false,
         dialog: false,
         user_dialog: false,
         search_user: null,
@@ -174,10 +177,17 @@
       }
     },
     methods: {
+      deleteBoard(id, index) {
+        this.$http.post('board/deleteBoard', {"id": id})
+          .then(response => {
+            this.dashboards.splice(index, 1)
+          })
+      },
       updateBoards() {
         this.$http.post('board/getUserBoard')
           .then(response => {
-            this.dashboards = response.data
+            this.dashboards = response.data;
+            this.downloaded = true
           })
           .catch(error => {
           })
