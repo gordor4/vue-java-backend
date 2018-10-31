@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-container class="md-content">
-      <v-card row class="text-xs-center">
-        <div class="centered-container">
-          <v-flex>
+    <v-container>
+      <v-layout row wrap>
+        <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
+          <v-card class="text-xs-center">
             <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
             <v-form ref="form" class="form" v-model="valid">
               <v-card-title>
@@ -22,7 +22,7 @@
                 Войти с помощью:
               </div>
               <div class="md-layout mb-3">
-                <img :src="require('../assets/google.svg')" />
+                <img :src="require('../assets/google.svg')"/>
               </div>
               <div class="md-layout mb-3">
                 <router-link to="/register">Регистрация</router-link>
@@ -32,10 +32,9 @@
             <v-alert v-if="errorText" :value="true" type="error">
               {{errorText}}
             </v-alert>
-          </v-flex>
-        </div>
-      </v-card>
-
+          </v-card>
+        </v-flex>
+      </v-layout>
     </v-container>
   </v-app>
 </template>

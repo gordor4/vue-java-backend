@@ -1,24 +1,17 @@
 <template>
-  <v-container v-bind="{ [`grid-list-$3`]: true }" fluid>
+  <v-container v-bind="{ [`grid-list-$4`]: true }" fluid>
     <v-layout row wrap pt-4>
       <v-flex
-        v-for="dashboard in dashboards"
-        :key="dashboard.name"
-        xs4
-        md4
-        lg4
-        my-2
-        pa-2
-      >
+        v-for="dashboard in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>
         <v-card>
           <v-img
             src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-            aspect-ratio="2.75"
-          ></v-img>
+            aspect-ratio="2.75">
+          </v-img>
           <v-card-title>
             <div>
               <h3>{{dashboard.boardName}}</h3>
-              <div>{{dashboard.boardName}}</div>
+              <div>{{dashboard.boardDescription}}</div>
             </div>
           </v-card-title>
           <v-card-actions>
@@ -26,7 +19,7 @@
               <v-icon>insert_link</v-icon>
             </v-btn>
             <v-btn flat icon v-if="!dashboard.public" @click="showLinkDialog">
-              <v-icon>add_person</v-icon>
+              <v-icon>person_add</v-icon>
             </v-btn>
             <v-btn flat icon>
               <v-icon>settings</v-icon>
@@ -62,26 +55,17 @@
       <v-card>
         <v-list three-line subheader>
           <v-layout>
-            <v-flex
-              px-4
-              pt-3
-              xs12
-              sm12
-              md12
-              align-center
-              text-xs-center
-            >
-              <v-text-field v-model="board.boardName" label="Название доски"></v-text-field>
+            <v-flex px-4 pt-3 xs12 sm12 md12 align-center text-xs-center>
+              <v-text-field outline v-model="board.boardName" label="Название доски"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout>
-            <v-flex
-              xs12
-              sm12
-              md12
-              align-center
-              text-xs-center
-            >
+            <v-flex pt-3 px-4>
+              <v-textarea outline label="Описание доски" v-model="board.boardDescription"></v-textarea>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex xs12 sm12 md12 align-center text-xs-center>
               <v-list-tile avatar>
                 <v-list-tile-action>
                   <v-checkbox v-model="board.isPublic"></v-checkbox>
@@ -95,14 +79,7 @@
           </v-layout>
 
           <v-layout>
-            <v-flex
-              xs12
-              sm12
-              md12
-              align-center
-              layout
-              text-xs-center
-            >
+            <v-flex xs12 sm12 md12 align-center layout text-xs-center>
               <v-list-tile avatar>
                 <v-list-tile-action>
                   <v-checkbox v-model="board.isPublicEdit"></v-checkbox>
@@ -114,36 +91,28 @@
               </v-list-tile>
             </v-flex>
           </v-layout>
-          <v-layout v-if="!board.isPublic">
-            <v-flex
-              xs12
-              sm12
-              md12
-              align-center
-              layout
-              text-xs-center
-            >
-              <v-list-tile avatar>
-                <v-list-tile-content>
-                  <v-list-tile-title>Добавить людей</v-list-tile-title>
-                  <v-list-tile-sub-title>Люди, у которых есть доступ для просмотра доски</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-flex>
+          <v-layout column v-if="!board.isPublic">
+            <v-layout>
+              <v-flex xs12 sm12 md12 align-center layout text-xs-center>
+                <v-list-tile avatar>
+                  <v-list-tile-content>
+                    <v-list-tile-title>Добавить людей</v-list-tile-title>
+                    <v-list-tile-sub-title>Люди, у которых есть доступ для просмотра доски</v-list-tile-sub-title>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <v-flex xs12 sm12 md12 align-center>
+                <v-chip v-for="(user, index) in available_users" :key="index" @click="deleteUser(index)" close>{{user}}
+                </v-chip>
+                <v-btn fab small dark color="indigo">
+                  <v-icon dark @click="openNewUserDialog">add</v-icon>
+                </v-btn>
+              </v-flex>
+            </v-layout>
           </v-layout>
-          <v-layout v-if="!board.isPublic">
-            <v-flex
-              xs12
-              sm12
-              md12
-              align-center>
-              <v-chip v-for="(user, index) in available_users" :key="index" @click="deleteUser(index)" close>{{user}}
-              </v-chip>
-              <v-btn fab small dark color="indigo">
-                <v-icon dark @click="openNewUserDialog">add</v-icon>
-              </v-btn>
-            </v-flex>
-          </v-layout>
+
         </v-list>
       </v-card>
     </v-dialog>
@@ -200,6 +169,7 @@
           boardName: null,
           isPublic: false,
           isPublicEdit: false,
+          boardDescription: null
         }
       }
     },
@@ -215,11 +185,7 @@
       createBoard() {
         this.dialog = false;
 
-        this.$http.post('board/createBoard', {
-          "boardName": this.board.boardName,
-          "isPublic": this.board.isPublic,
-          "isPublicEdit": this.board.isPublicEdit
-        })
+        this.$http.post('board/createBoard', this.board)
           .then(response => {
           })
           .catch(error => {

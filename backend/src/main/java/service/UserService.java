@@ -124,6 +124,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response create(User user) {
         try {
+            //TODO: fix send email on error
             String userPassword = user.getPassword();
             user.setPassword(PasswordUtil.getSaltedHash(userPassword));
             user.setCreationDate(new Date());
@@ -131,9 +132,10 @@ public class UserService {
             user.setBanned(false);
 
             entityManager.persist(user);
+            String id = String.valueOf(user.getId());
+
             mailBean.sendEmailActivation(user.getEmail(), user.getUsername());
 
-            String id = String.valueOf(user.getId());
             return Response.created(
                     uriInfo.getAbsolutePathBuilder()
                             .path(id)
@@ -200,15 +202,10 @@ public class UserService {
     @Path("/activateUser")
     @JWTTokenNeeded
     public Response activateAccount(@Context HttpRequest request) {
-        //TODO: закончить метод
-        String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
+        User user = userBean.findUser(request);
+        user.setActivated(true);
 
-        TypedQuery query = entityManager.createNamedQuery(User.FIND_USER, User.class);
-        query.setParameter("username", username);
-
-        User user = (User) query.getSingleResult();
         entityManager.persist(user);
-
         return Response.ok().build();
     }
 
@@ -239,8 +236,9 @@ public class UserService {
 
         Avatar avatar = new Avatar();
         avatar.setBinary(binaryString.toString());
-        user.setAvatar(avatar);
+        entityManager.persist(avatar);
 
+        user.setAvatarId(avatar.getId());
         entityManager.persist(user);
 
         return Response.ok().build();

@@ -11,13 +11,6 @@
 </script>
 
 <style>
-  .md-content {
-    z-index: 1;
-    padding: 40px;
-    width: 600px;
-    position: relative;
-  }
-
   .md-layout {
     display: flex;
     justify-content: space-between;

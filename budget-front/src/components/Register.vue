@@ -1,33 +1,33 @@
 <template>
   <v-app>
-    <v-container class="md-content">
-      <v-card row class="text-xs-center">
-        <div class="centered-container">
-          <v-form ref="form" v-model="valid">
-            <v-flex>
+    <v-container>
+      <v-layout row wrap>
+        <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
+          <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
+          <v-card class="text-xs-center">
+            <v-form ref="form" v-model="valid">
               <div class="form">
                 <v-card-title>
                   <h1>Регистрация</h1>
                 </v-card-title>
-
                 <v-text-field v-model="user.username" :rules="usernameRules" required
                               label="Имя пользователя"></v-text-field>
                 <v-text-field v-model="user.password" :rules="passwordRules" required type="password"
                               label="Пароль"></v-text-field>
                 <v-text-field v-model="user.email" :rules="emailRules" required label="E-mail"></v-text-field>
-
-                <div class="md-layout mb-5">
+                <div class=" md-layout mb-5">
                   <router-link to="/">Войти</router-link>
                   <v-btn @click="register">Зарегистрироваться</v-btn>
                 </div>
               </div>
-            </v-flex>
-          </v-form>
-          <v-alert v-if="errorText" :value="true" type="error">
-            {{errorText}}
-          </v-alert>
-        </div>
-      </v-card>
+            </v-form>
+            <v-alert v-if="errorText" :value="true" type="error">
+              {{errorText}}
+            </v-alert>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
     </v-container>
   </v-app>
 </template>
@@ -72,6 +72,7 @@
               this.$router.push('/')
             })
             .catch(error => {
+              console.log("error on register");
               this.loading = false;
               this.errorText = 'Ошибка при регистрации'
             });

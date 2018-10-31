@@ -20,7 +20,7 @@ create table avatar (
 
 create table "user" (
 	"id" int4 DEFAULT nextval('user_id_seq'::regclass) PRIMARY KEY,
-	username VARCHAR(20) NOT NULL,
+	username VARCHAR(20) NOT NULL UNIQUE,
 	email VARCHAR(40) NOT NULL UNIQUE,
 	password VARCHAR(200) NOT NULL,
 	activated boolean default false NOT NULL,
@@ -38,7 +38,7 @@ create table "board" (
 	"id" int4 DEFAULT nextval('board_id_seq'::regclass) PRIMARY KEY,
 	owner_id int4 NOT NULL REFERENCES "user"(id),
   board_name text NOT NULL,
-  board_description text NOT NULL,
+  board_description text,
   is_public boolean NOT NULL DEFAULT false,
   is_public_edit boolean NOT NULL DEFAULT false,
   creation_date date NOT NULL DEFAULT CURRENT_DATE

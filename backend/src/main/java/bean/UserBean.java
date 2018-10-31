@@ -31,4 +31,11 @@ public class UserBean {
         return (User) query.getSingleResult();
     }
 
+    public User findUserWithEmail(String email) {
+        TypedQuery query = entityManager.createNamedQuery(User.FIND_USER_WITH_EMAIL, User.class);
+        query.setParameter(User.EMAIL_PARAM, email);
+
+        return (User) query.getSingleResult();
+    }
+
 }

@@ -45,6 +45,7 @@ public class BoardService {
         board.setBoardName(boardParam.getBoardName());
         board.setOwnerId(user.getId());
         board.setCreationDate(new Date());
+        board.setBoardDescription(boardParam.getBoardDescription());
         board.setPublic(Boolean.valueOf(boardParam.getIsPublic()));
         board.setPublicEdit(Boolean.valueOf(boardParam.getIsPublicEdit()));
         entityManager.persist(board);

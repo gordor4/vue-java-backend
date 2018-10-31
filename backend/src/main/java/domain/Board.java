@@ -40,6 +40,7 @@ public class Board {
     public static final String GET_USER_BOARD = "user boards";
     public static final String USER_PARAM = "user";
 
+    //TODO: Подумать над разрешениями
 //    @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "id")
 //    private List<BoardPermission> boardPermissions;

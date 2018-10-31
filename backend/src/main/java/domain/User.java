@@ -1,10 +1,6 @@
 package domain;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
 import java.util.Date;
 
 @Table(name = "user", schema = "public")
@@ -23,18 +19,22 @@ public class User
 	public static final String FIND_USER = "FIND_USER";
 	public static final String FIND_ALL = "FIND_ALL";
 	public static final String FIND_USER_WITH_EMAIL = "FIND_USER_WITH_EMAIL";
+	public static final String EMAIL_PARAM = "email";
 
-	@Column(name = "username")
+	@Column(name = "username", unique = true, nullable = false)
 	private String username;
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	private String password;
 
-	@Column(name = "email")
+	@Column(name = "email", unique = true, nullable = false)
 	private String email;
 
 	private boolean activated;
 	private boolean banned;
+
+	@Column(name = "avatar_id")
+	private int avatarId;
 
 	@Column(name = "creation_date")
 	@Temporal(TemporalType.DATE)
@@ -152,5 +152,13 @@ public class User
 
 	public void setSecondName(String secondName) {
 		this.secondName = secondName;
+	}
+
+	public int getAvatarId() {
+		return avatarId;
+	}
+
+	public void setAvatarId(int avatarId) {
+		this.avatarId = avatarId;
 	}
 }

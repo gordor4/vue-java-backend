@@ -20,8 +20,8 @@ public class MailBean {
     private static final String SENDER_EMAIL = "mail@gordor.host";
     private static final String ACTIVATION_EMAIL_TEXT = "Для активации аккаунта %s перейдите по ссылке %s";
     private static final String RESET_EMAIL_TEXT = "Для восстановления доступа к аккаунту %s перейдите по ссылке %s";
-    private static final String ACTIVATION_EMAIL_SUBJECT = "Активация аккаунта";
-    private static final String RESET_EMAIL_SUBJECT = "Восстановление аккаунта";
+    private static final String ACTIVATION_EMAIL_SUBJECT = "Account activation";
+    private static final String RESET_EMAIL_SUBJECT = "Reset password";
     private static final String RESET_PASSWORD_HREF = "<a href=\"%s/resetPassword?token=%s\">Восстановить доступ</a>";
 
     private void send(String email, String subject, String text) {

@@ -14,9 +14,7 @@ public class ProfileUser {
         this.secondName = user.getSecondName();
 
         Avatar avatar = user.getAvatar();
-
-        String avatarString = avatar != null ? avatar.getBinary() : defaultAvatar;
-        this.avatar = avatarString;
+        this.avatar = avatar != null ? avatar.getBinary() : defaultAvatar;
     }
 
     public String getUsername() {

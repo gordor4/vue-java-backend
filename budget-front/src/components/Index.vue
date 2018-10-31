@@ -16,7 +16,7 @@
           <v-icon>notifications</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-container>
+      <v-container fluid>
         <router-view></router-view>
       </v-container>
     </v-app>
