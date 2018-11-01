@@ -3,9 +3,10 @@
     <v-container >
       <v-layout row wrap>
         <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
-          <v-card row class="pa-3">
+          <v-card row>
+            <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
+            <v-flex pa-3>
               <!--TODO:Добавить валидацию email-->
-              <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
               <v-card-title>
                 <v-flex>
                   <h2>Восстановление пароля</h2>
@@ -23,6 +24,8 @@
                 </v-flex>
               </v-layout>
               <vue-recaptcha sitekey="6LezU3IUAAAAADypzP5J4e1-5i8vBlmiRaYnOQJy"></vue-recaptcha>
+            </v-flex>
+
           </v-card>
         </v-flex>
       </v-layout>

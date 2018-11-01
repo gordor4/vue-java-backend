@@ -11,7 +11,6 @@
                   <h2>Авторизация</h2>
                 </v-flex>
               </v-card-title>
-
               <v-layout row wrap mb-3 mt-3 mx-3>
                 <v-text-field v-model="login.username" :rules="usernameRules" required
                               label="Имя пользователя"></v-text-field>

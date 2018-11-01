@@ -3,6 +3,7 @@ package bean;
 import app.AppConfiguration;
 
 import javax.annotation.Resource;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.mail.*;
@@ -24,6 +25,7 @@ public class MailBean {
     private static final String RESET_EMAIL_SUBJECT = "Reset password";
     private static final String RESET_PASSWORD_HREF = "<a href=\"%s/resetPassword?token=%s\">Восстановить доступ</a>";
 
+    @Asynchronous
     private void send(String email, String subject, String text) {
         try {
             Address address = new InternetAddress(email);

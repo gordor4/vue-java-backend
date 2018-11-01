@@ -51,3 +51,5 @@ create table board_permission (
   permission_read boolean default false,
   permission_edit boolean default false
 );
+
+create table
