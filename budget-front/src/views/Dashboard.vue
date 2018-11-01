@@ -1,8 +1,8 @@
 <template>
   <v-layout>
-    <v-container v-bind="{ [`grid-list-$4`]: true }" fluid>
+    <v-container fluid>
       <v-layout row wrap pt-4>
-        <v-flex
+        <v-flex xs12 sm4 md3 lg2
           v-for="(dashboard , index) in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>
           <v-card>
             <v-img
@@ -53,12 +53,12 @@
       <v-card>
         <v-list three-line subheader>
           <v-layout>
-            <v-flex px-4 pt-3 xs12 sm12 md12 align-center text-xs-center>
+            <v-flex px-4 pt-4 xs12 sm12 md12 align-center text-xs-center>
               <v-text-field outline v-model="board.boardName" label="Название доски"></v-text-field>
             </v-flex>
           </v-layout>
           <v-layout>
-            <v-flex pt-3 px-4>
+            <v-flex pt-2 px-4>
               <v-textarea outline label="Описание доски" v-model="board.boardDescription"></v-textarea>
             </v-flex>
           </v-layout>
@@ -128,15 +128,10 @@
       </v-toolbar>
       <v-card>
         <v-layout>
-          <v-flex py-3 px-4 xs12 sm9 md9 align-center text-xs-center>
+          <v-flex py-2 px-4 xs12 sm9 md9 align-center text-xs-center>
             <v-text-field v-model="search_user" label="Имя пользователя / Почта"></v-text-field>
           </v-flex>
-          <v-flex
-            py-4
-            px-3
-            xs12
-            sm3
-            md3>
+          <v-flex py-2 px-3 xs12 sm3 md3>
             <v-btn outline color="indigo">Найти</v-btn>
           </v-flex>
         </v-layout>

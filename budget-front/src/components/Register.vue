@@ -5,21 +5,31 @@
         <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
           <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
           <v-card class="text-xs-center">
-            <v-form ref="form" v-model="valid">
-              <div class="form">
-                <v-card-title>
-                  <h1>Регистрация</h1>
-                </v-card-title>
+            <v-form ref="form" v-model="valid" class="pa-3">
+              <v-card-title>
+                <v-flex>
+                  <h2>Регистрация</h2>
+                </v-flex>
+              </v-card-title>
+              <v-layout row wrap mb-2  mx-3>
                 <v-text-field v-model="user.username" :rules="usernameRules" required
                               label="Имя пользователя"></v-text-field>
+              </v-layout>
+              <v-layout row wrap my-2 mx-3>
                 <v-text-field v-model="user.password" :rules="passwordRules" required type="password"
                               label="Пароль"></v-text-field>
+              </v-layout>
+              <v-layout row wrap my-2 mx-3>
                 <v-text-field v-model="user.email" :rules="emailRules" required label="E-mail"></v-text-field>
-                <div class=" md-layout mb-5">
-                  <router-link to="/">Войти</router-link>
-                  <v-btn @click="register">Зарегистрироваться</v-btn>
-                </div>
-              </div>
+              </v-layout>
+              <v-layout row wrap my-2 mx-3>
+                <router-link to="/">Войти</router-link>
+              </v-layout>
+              <v-layout row wrap align-center justify-end fill-height mt-5>
+                <v-flex xs12 sm5 md5 lg5>
+                  <v-btn color="primary" class="rounded-btn" @click="register">Зарегистрироваться</v-btn>
+                </v-flex>
+              </v-layout>
             </v-form>
             <v-alert v-if="errorText" :value="true" type="error">
               {{errorText}}
@@ -83,4 +93,7 @@
 </script>
 
 <style scoped>
+  .rounded-btn {
+    border-radius:4px;
+  }
 </style>

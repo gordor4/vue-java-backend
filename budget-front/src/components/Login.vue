@@ -3,31 +3,37 @@
     <v-container>
       <v-layout row wrap>
         <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
-          <v-card class="text-xs-center">
+          <v-card class="rounded-card">
             <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
-            <v-form ref="form" class="form" v-model="valid">
+            <v-form ref="form" class="pa-3" v-model="valid">
               <v-card-title>
-                <h1>Авторизация</h1>
+                <v-flex>
+                  <h2>Авторизация</h2>
+                </v-flex>
               </v-card-title>
 
-              <v-text-field v-model="login.username" :rules="usernameRules" required
-                            label="Имя пользователя"></v-text-field>
-              <v-text-field v-model="login.password" :rules="passwordRules" required type="password"
-                            label="Пароль"></v-text-field>
-
-              <div class="md-layout mt-2 mb-5">
+              <v-layout row wrap mb-3 mt-3 mx-3>
+                <v-text-field v-model="login.username" :rules="usernameRules" required
+                              label="Имя пользователя"></v-text-field>
+              </v-layout>
+              <v-layout row wrap mb-3 mt-3 mx-3>
+                <v-text-field v-model="login.password" :rules="passwordRules" required type="password"
+                              label="Пароль"></v-text-field>
+              </v-layout>
+              <v-layout row wrap mb-3 mt-3 mx-3>
                 <router-link to="/reset">Восстановить пароль</router-link>
-              </div>
-              <div class="md-layout mb-3">
-                Войти с помощью:
-              </div>
-              <div class="md-layout mb-3">
-                <img :src="require('../assets/google.svg')"/>
-              </div>
-              <div class="md-layout mb-3">
+              </v-layout>
+              <v-layout row wrap mb-5 mx-3>
                 <router-link to="/register">Регистрация</router-link>
-                <v-btn @click="auth">Войти</v-btn>
-              </div>
+              </v-layout>
+              <!--<v-layout row wrap mb-3 ml-2>-->
+              <!--<img :src="require('../assets/google.svg')"/>-->
+              <!--</v-layout>-->
+              <v-layout row wrap align-center justify-end row fill-height>
+                <v-flex xs12 sm3 md3 lg3>
+                  <v-btn color="primary" class="rounded-btn" @click="auth">Войти</v-btn>
+                </v-flex>
+              </v-layout>
             </v-form>
             <v-alert v-if="errorText" :value="true" type="error">
               {{errorText}}
@@ -101,4 +107,7 @@
 </script>
 
 <style scoped>
+  .rounded-btn {
+    border-radius:4px;
+  }
 </style>

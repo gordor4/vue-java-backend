@@ -3,22 +3,32 @@
     <v-container>
       <v-layout row wrap>
         <v-flex xs10 sm8 md6 lg6 offset-xs1 offset-sm2 offset-md3 offset-lg3 fill-height mt-5>
-          <v-card row class="text-xs-center">
-                <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
-                <div class="form">
-                  <v-card-title>
-                    <h1>Восстановление пароля</h1>
-                  </v-card-title>
+          <v-card row class="pa-3">
+            <v-progress-linear :indeterminate="true" v-if="loading"></v-progress-linear>
+            <v-card-title>
+              <v-flex>
+                <h2>Смена пароля</h2>
+              </v-flex>
 
-                  <v-text-field v-model="newPassword" type="password" label="Новый пароль"></v-text-field>
-                  <v-text-field v-model="repeatNewPassword" type="password"
-                                label="Повторите новый пароль"></v-text-field>
+            </v-card-title>
 
-                  <div class="md-layout mb-5">
-                    <router-link to="/">Войти</router-link>
-                    <v-btn @click="reset">Сменить пароль</v-btn>
-                  </div>
-                </div>
+            <v-layout row wrap my-2 mx-3>
+              <v-text-field v-model="newPassword" type="password" label="Новый пароль"></v-text-field>
+            </v-layout>
+            <v-layout row wrap my-2 mx-3>
+              <v-text-field v-model="repeatNewPassword" type="password"
+                            label="Повторите новый пароль"></v-text-field>
+            </v-layout>
+
+            <v-layout row wrap my-2 mx-3>
+              <router-link to="/">Войти</router-link>
+            </v-layout>
+            <v-layout row wrap align-center justify-end row fill-height mt-5>
+              <v-flex xs12 sm3 md3 lg3>
+                <v-btn color="primary" class="rounded-btn" @click="reset">Сменить пароль</v-btn>
+              </v-flex>
+            </v-layout>
+
           </v-card>
         </v-flex>
       </v-layout>
@@ -67,5 +77,7 @@
 </script>
 
 <style scoped>
-
+  .rounded-btn {
+    border-radius:4px;
+  }
 </style>
