@@ -29,7 +29,7 @@
                 <v-icon>delete</v-icon>
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn flat icon @click="">
+              <v-btn flat icon @click="openBoard(dashboard.id)">
                 <v-icon large>chevron_right</v-icon>
               </v-btn>
             </v-card-actions>
@@ -209,6 +209,9 @@
       },
       showLinkDialog() {
         //TODO: добавить доступ по ссылке
+      },
+      openBoard(id) {
+        this.$router.push('board/' + id)
       }
     },
     created() {

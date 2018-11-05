@@ -210,6 +210,19 @@ public class UserService {
     }
 
     @POST
+    @Path("/updateUser")
+    @JWTTokenNeeded
+    public Response updateUserData(@Context HttpRequest request, ProfileUser profileUser) {
+        User user = userBean.findUser(request);
+        user.setFirstName(profileUser.getFirstName());
+        user.setLastName(profileUser.getLastName());
+        user.setSecondName(profileUser.getSecondName());
+
+        entityManager.persist(user);
+        return Response.ok().build();
+    }
+
+    @POST
     @Path("/uploadUserPhoto")
     @Consumes(MULTIPART_FORM_DATA)
     @JWTTokenNeeded

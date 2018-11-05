@@ -7,6 +7,7 @@ import Reset from '@/components/Reset'
 import ResetPassword from '@/components/ResetPassword'
 import Profile from '@/views/Profile'
 import Dashboard from '@/views/Dashboard'
+import DashboardView from '@/views/DashboardView'
 
 Vue.use(Router);
 
@@ -38,6 +39,11 @@ export default new Router({
           path: 'dashboard',
           name: 'Dashboard',
           component: Dashboard
+        },
+        {
+          path: 'board/:board_id',
+          name: 'DashboardView',
+          component: DashboardView
         }
       ]
     },

@@ -17,7 +17,8 @@ export default new Vuex.Store({
       avatar: '',
       firstName: '',
       lastName: '',
-      secondName: ''
+      secondName: '',
+      email: ''
     },
     navigationShow: false
   },

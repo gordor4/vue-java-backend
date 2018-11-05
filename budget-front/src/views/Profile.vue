@@ -1,58 +1,71 @@
 <template>
-  <v-container>
-    <v-flex xs12 mt-5>
-      <v-card>
-        <v-card-title primary-title>
-          <div>
-            <h3 class="headline mb-0">Профиль пользователя</h3>
-          </div>
-        </v-card-title>
-
-        <v-card-text>
-          <v-layout row wrap pa-3>
-            <v-flex
-              xs12
-              sm3
-              md4
-              align-center
-              justify-center
-              layout
-              text-xs-center
-            >
-              <v-avatar
-                :size="220"
-                color="grey lighten-4"
-                @click="pickFile"
-              >
-                <img :src=userAvatar()>
-              </v-avatar>
-              <input
-                type="file"
-                style="display: none"
-                ref="image"
-                accept="image/*"
-                @change="onFilePicked"
-              >
-            </v-flex>
-            <v-flex xs12 sm9 md8 pr-5>
+  <v-container fluid mt-4>
+    <v-layout row wrap>
+      <v-flex px-3 mt-4 xs12 sm6 md6 lg6>
+        <v-card class="px-4">
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Личные данные</h3>
+            </div>
+          </v-card-title>
+          <v-card-text>
+            <v-layout row wrap>
               <v-text-field v-model="user.firstName" outline label="Фамилия"></v-text-field>
+            </v-layout>
+            <v-layout row wrap>
               <v-text-field v-model="user.lastName" outline label="Имя"></v-text-field>
+            </v-layout>
+            <v-layout row wrap>
               <v-text-field v-model="user.secondName" outline label="Отчество"></v-text-field>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap pa-3>
-            <v-flex>
-              <v-btn outline>
-                Сохранить
-              </v-btn>
-            </v-flex>
+            </v-layout>
+            <v-layout row wrap>
+              <v-flex>
+                <v-dialog
+                  ref="dialog"
+                  v-model="menu"
+                  :return-value.sync="user.dateOfBirth"
+                  persistent
+                  lazy
+                  full-width
+                  width="290px"
+                >
+                  <v-text-field slot="activator" outline v-model="user.dateOfBirth" label="День рождения"
+                                readonly></v-text-field>
+                  <v-date-picker v-model="user.dateOfBirth" no-title scrollable>
+                    <v-spacer></v-spacer>
+                    <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                    <v-btn flat color="primary" @click="$refs.dialog.save(user.dateOfBirth)">OK</v-btn>
+                  </v-date-picker>
+                </v-dialog>
+              </v-flex>
 
-          </v-layout>
-        </v-card-text>
-
-      </v-card>
-    </v-flex>
-
+            </v-layout>
+            <v-layout row wrap align-center justify-end fill-height>
+              <v-flex xs12 md6 sm6 lg3>
+                <v-btn block outline color="primary" @click="updateUserData">Сохранить</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+      <v-flex px-3 mt-4 xs12 sm6 md6 lg6 mt-6>
+        <v-card class="px-4">
+          <v-card-title primary-title>
+            <div>
+              <h3 class="headline mb-0">Данные аккаунта</h3>
+            </div>
+          </v-card-title>
+          <v-card-text>
+            <v-layout row wrap>
+              <v-text-field readonly v-model="userStore.username" outline label="Логин"></v-text-field>
+            </v-layout>
+            <v-layout row wrap>
+              <v-text-field readonly v-model="userStore.email" outline label="Email"></v-text-field>
+            </v-layout>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </v-container>
 </template>
 
@@ -61,11 +74,12 @@
     name: "Profile",
     data() {
       return {
+        menu: false,
         user: {
           firstName: null,
           lastName: null,
           secondName: null,
-          avatar: null
+          dateOfBirth: new Date().toISOString().substr(0, 10)
         }
       }
     },
@@ -96,18 +110,33 @@
         }
       },
       uploadAvatar(photo) {
-        console.log(photo)
-        this.$http.post('users/uploadUserPhoto',
-          photo,
+        this.$http.post('users/uploadUserPhoto', photo,
           {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
-          }).then()
-          .catch()
+          })
+          .then(response =>  {
+
+          })
+          .catch(error => {
+
+          })
+      },
+      updateUserData() {
+        this.$http.post('users/updateUser', this.user)
+          .then(response => {
+
+          })
+      },
+      updateUserData() {
+        this.user.firstName = this.userStore.firstName;
+        this.user.lastName = this.userStore.lastName;
+        this.user.secondName = this.userStore.secondName;
       }
     },
     created() {
+      this.updateUserData()
     }
   }
 

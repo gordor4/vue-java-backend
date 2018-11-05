@@ -7,11 +7,14 @@ drop SEQUENCE IF EXISTS user_id_seq;
 drop SEQUENCE IF EXISTS board_id_seq;
 drop SEQUENCE IF EXISTS board_permission_id_seq;
 drop SEQUENCE IF EXISTS avatar_id_seq;
+drop SEQUENCE IF EXISTS dashboard_card_id_seq;
 
 create SEQUENCE avatar_id_seq;
 create SEQUENCE user_id_seq;
 create SEQUENCE board_id_seq;
 create SEQUENCE board_permission_id_seq;
+
+
 
 create table avatar (
   "id" int4 DEFAULT nextval('avatar_id_seq'::regclass) PRIMARY KEY,
@@ -52,4 +55,9 @@ create table board_permission (
   permission_edit boolean default false
 );
 
-create table
+create table dashboard_card (
+  "id" int4 DEFAULT nextval('dashboard_card_id_seq'::regclass) PRIMARY KEY,
+  board_id int4 references board(id),
+  card_name text NOT NULL,
+
+);
