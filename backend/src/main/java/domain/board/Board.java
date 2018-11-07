@@ -1,4 +1,6 @@
-package domain;
+package domain.board;
+
+import domain.user.User;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -6,7 +8,7 @@ import java.util.Date;
 @Table(name = "board", schema = "public")
 @Entity
 @NamedQueries({
-        @NamedQuery(name = Board.GET_USER_BOARD, query = "Select b from Board b WHERE b.ownerId = :user")
+        @NamedQuery(name = Board.GET_USER_BOARD, query = "Select b from Board b WHERE b.owner.id = :user")
 })
 public class Board {
 
@@ -14,8 +16,8 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private User owner;
 
     @Column(name = "board_name")
@@ -33,9 +35,6 @@ public class Board {
     @Column(name = "creation_date")
     @Temporal(TemporalType.DATE)
     private Date creationDate;
-
-    @Column(name = "owner_id")
-    private int ownerId;
 
     public static final String GET_USER_BOARD = "user boards";
     public static final String USER_PARAM = "user";
@@ -118,13 +117,5 @@ public class Board {
 
     public Boolean getPublicEdit() {
         return isPublicEdit;
-    }
-
-    public int getOwnerId() {
-        return ownerId;
-    }
-
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
     }
 }

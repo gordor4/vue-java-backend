@@ -1,6 +1,6 @@
 package bean;
 
-import domain.User;
+import domain.user.User;
 import filter.JWTTokenNeededFilter;
 import org.jboss.resteasy.spi.HttpRequest;
 

@@ -1,7 +1,12 @@
 package service;
 
 import bean.UserBean;
-import domain.*;
+import domain.board.Board;
+import domain.card.BoardCard;
+import domain.card.BoardCardList;
+import domain.front.BoardId;
+import domain.front.BoardParam;
+import domain.user.User;
 import filter.JWTTokenNeeded;
 import org.jboss.resteasy.spi.HttpRequest;
 
@@ -10,10 +15,12 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +46,7 @@ public class BoardService {
 
         Board board = new Board();
         board.setBoardName(boardParam.getBoardName());
-        board.setOwnerId(user.getId());
+        board.setOwner(user);
         board.setCreationDate(new Date());
         board.setBoardDescription(boardParam.getBoardDescription());
         board.setPublic(Boolean.valueOf(boardParam.getIsPublic()));
@@ -56,7 +63,7 @@ public class BoardService {
         User user = userBean.findUser(request);
         Board board = entityManager.find(Board.class, boardId.getId());
 
-        if (board.getOwnerId() == user.getId()) {
+        if (board.getOwner().getId() == user.getId()) {
             entityManager.remove(board);
 
             return Response.ok().build();
@@ -74,7 +81,7 @@ public class BoardService {
         boardCardList.setBoard(board);
 
         TypedQuery<BoardCard> boardQuery = entityManager.createNamedQuery(BoardCard.GET_BOARD_CARDS, BoardCard.class);
-        boardQuery.setParameter("bord", board.getId());
+        boardQuery.setParameter("board", board.getId());
         List<BoardCard> boardCards = boardQuery.getResultList();
 
         boardCardList.setBoardCards(boardCards);
@@ -86,10 +93,18 @@ public class BoardService {
     @JWTTokenNeeded
     public Response getBoardCards(@Context HttpRequest request) {
         User user = userBean.findUser(request);
+
         TypedQuery<Board> boardTypedQuery = entityManager.createNamedQuery(Board.GET_USER_BOARD, Board.class);
         boardTypedQuery.setParameter(Board.USER_PARAM, user.getId());
         List<Board> userBoards = boardTypedQuery.getResultList();
 
         return Response.ok(userBoards).build();
+    }
+
+    @POST
+    @Path("/createBoardCard")
+    @JWTTokenNeeded
+    public Response createBoardCard() {
+        return Response.ok().build();
     }
 }

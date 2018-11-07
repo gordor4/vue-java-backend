@@ -1,3 +1,11 @@
+CREATE DATABASE "budget_db"
+    WITH OWNER "budget_user"
+    ENCODING 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TEMPLATE template0;
+
+
 DROP TABLE IF EXISTS "public"."user";
 DROP TABLE IF EXISTS "public"."board";
 DROP TABLE IF EXISTS "public"."board_permission";
@@ -8,11 +16,13 @@ drop SEQUENCE IF EXISTS board_id_seq;
 drop SEQUENCE IF EXISTS board_permission_id_seq;
 drop SEQUENCE IF EXISTS avatar_id_seq;
 drop SEQUENCE IF EXISTS dashboard_card_id_seq;
+drop SEQUENCE IF EXISTS card_content_id_seq;
 
 create SEQUENCE avatar_id_seq;
 create SEQUENCE user_id_seq;
 create SEQUENCE board_id_seq;
 create SEQUENCE board_permission_id_seq;
+create SEQUENCE card_content_id_seq;
 
 
 
@@ -59,5 +69,14 @@ create table dashboard_card (
   "id" int4 DEFAULT nextval('dashboard_card_id_seq'::regclass) PRIMARY KEY,
   board_id int4 references board(id),
   card_name text NOT NULL,
+  card_type varchar NOT NULL,
+  private boolean NOT NULL default true,
 
+);
+
+create table text_card_content (
+   "id" int4 DEFAULT nextval('card_content_id_seq'::regclass) PRIMARY KEY,
+   dashboard_id int4 references dashboard_card(id),
+   dashboard_text text,
+   title text NOT NULL
 );

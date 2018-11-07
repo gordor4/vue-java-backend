@@ -2,7 +2,11 @@ package service;
 
 import bean.MailBean;
 import bean.UserBean;
-import domain.*;
+import domain.TokenResponse;
+import domain.user.Avatar;
+import domain.user.EmailReset;
+import domain.user.ProfileUser;
+import domain.user.User;
 import filter.JWTTokenNeeded;
 import filter.JWTTokenNeededFilter;
 import io.jsonwebtoken.Jwts;
@@ -251,7 +255,7 @@ public class UserService {
         avatar.setBinary(binaryString.toString());
         entityManager.persist(avatar);
 
-        user.setAvatarId(avatar.getId());
+        user.setAvatar(avatar);
         entityManager.persist(user);
 
         return Response.ok().build();

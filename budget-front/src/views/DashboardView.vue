@@ -8,6 +8,39 @@
         <v-toolbar-title>
           {{this.board.boardName}}
         </v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-speed-dial
+          v-model="fab"
+          direction="bottom"
+          hover="true"
+          :open-on-hover="true">
+          <v-btn
+            small slot="activator" v-model="fab" icon dark fab>
+            <v-icon color="white" medium>dehaze</v-icon>
+          </v-btn>
+          <v-btn
+            fab
+            dark
+            small
+            color="green">
+            <v-icon>edit</v-icon>
+          </v-btn>
+          <v-btn
+            @click="addCard"
+            fab
+            dark
+            small
+            color="indigo">
+            <v-icon>add</v-icon>
+          </v-btn>
+          <v-btn
+            fab
+            dark
+            small
+            color="red">
+            <v-icon>delete</v-icon>
+          </v-btn>
+        </v-speed-dial>
       </v-toolbar>
       <v-card-title>
         <v-layout>
@@ -16,14 +49,17 @@
               <v-card-title>
                 {{card.cardName}}
               </v-card-title>
+              <v-card-text>
+
+              </v-card-text>
             </v-card>
           </v-flex>
         </v-layout>
       </v-card-title>
-      <v-card-actions>
-
-      </v-card-actions>
     </v-card>
+
+
+
   </v-container>
 </template>
 
@@ -33,7 +69,9 @@
     data() {
       return {
         board: null,
-        boardCards: [{cardName: null}]
+        boardCards: [{cardName: null}],
+        fab: false,
+        newCardDialog: false
       }
     },
     computed: {
@@ -44,6 +82,9 @@
     methods: {
       backToList() {
         this.$router.back()
+      },
+      addCard() {
+
       }
     },
     created() {

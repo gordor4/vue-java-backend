@@ -1,4 +1,4 @@
-package domain;
+package domain.front;
 
 public class BoardParam {
     private String isPublic;

@@ -4,7 +4,7 @@
       <v-layout row wrap pt-4>
         <v-flex xs12 sm4 md3 lg2
           v-for="(dashboard , index) in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>
-          <v-card>
+          <v-card hover>
             <v-img
               src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
               aspect-ratio="2.75">
