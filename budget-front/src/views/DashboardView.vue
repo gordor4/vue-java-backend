@@ -57,8 +57,30 @@
         </v-layout>
       </v-card-title>
     </v-card>
-
-
+    <v-dialog width=600 v-model="newCardDialog">
+      <v-card>
+        <v-toolbar color="primary">
+          Добавление новой карточки
+        </v-toolbar>
+        <v-card-text>
+          <v-text-field outline label="Название карточки" v-model="newCard.cardName">
+          </v-text-field>
+          <v-select
+            v-model="newCard.cardType"
+            outline
+            :items="newCardTypes"
+            item-text="name"
+            label="Выберите тип карточки"
+          ></v-select>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="createNewCard" color="primary" flat>
+            Добавить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
   </v-container>
 </template>
@@ -71,7 +93,16 @@
         board: null,
         boardCards: [{cardName: null}],
         fab: false,
-        newCardDialog: false
+        newCardDialog: false,
+        newCardTypes: [
+          {name: 'Текстовая карточка', type: 'text'}
+        ],
+        newCard: {
+          cardName: '',
+          cardType: null,
+          boardId: this.board_id
+        }
+
       }
     },
     computed: {
@@ -84,6 +115,9 @@
         this.$router.back()
       },
       addCard() {
+        this.newCardDialog = true
+      },
+      createNewCard() {
 
       }
     },

@@ -1,7 +1,7 @@
 package bean;
 
 import domain.user.User;
-import filter.JWTTokenNeededFilter;
+import filter.AuthFilter;
 import org.jboss.resteasy.spi.HttpRequest;
 
 import javax.ejb.Stateless;
@@ -16,7 +16,7 @@ public class UserBean {
     private EntityManager entityManager;
 
     public User findUser(HttpRequest request) {
-        String username = (String) request.getAttribute(JWTTokenNeededFilter.USER);
+        String username = (String) request.getAttribute(AuthFilter.USER);
         if(username != null) {
             return findUser(username);
         }

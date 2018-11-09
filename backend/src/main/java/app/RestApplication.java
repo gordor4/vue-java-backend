@@ -1,6 +1,6 @@
 package app;
 
-import filter.JWTTokenNeededFilter;
+import filter.AuthFilter;
 import service.BoardService;
 import service.UserService;
 
@@ -19,7 +19,7 @@ public class RestApplication extends Application
 	public RestApplication() {
 		classes.add(UserService.class);
 		classes.add(BoardService.class);
-		classes.add(JWTTokenNeededFilter.class);
+		classes.add(AuthFilter.class);
 		classes.add(AppConfiguration.class);
 	}
 

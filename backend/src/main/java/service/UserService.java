@@ -7,8 +7,8 @@ import domain.user.Avatar;
 import domain.user.EmailReset;
 import domain.user.ProfileUser;
 import domain.user.User;
-import filter.JWTTokenNeeded;
-import filter.JWTTokenNeededFilter;
+import filter.AuthFilter;
+import filter.NeedAuth;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.codec.binary.Base64;
@@ -152,7 +152,7 @@ public class UserService {
 
     @POST
     @Path("/get")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response findUser(@Context HttpRequest request) {
         User user = userBean.findUser(request);
 
@@ -180,7 +180,7 @@ public class UserService {
 
     @POST
     @Path("/resetPassword")
-    @JWTTokenNeeded
+    @NeedAuth
     @Consumes(APPLICATION_FORM_URLENCODED)
     public Response resetPassword(@Context HttpRequest request, @FormParam("newPassword") String newPassword) {
         try {
@@ -196,7 +196,7 @@ public class UserService {
 
     @POST
     @Path("/findUser")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response getUser(User userParam) {
         User user = userBean.findUser(userParam.getUsername());
         return Response.ok(user).build();
@@ -204,7 +204,7 @@ public class UserService {
 
     @POST
     @Path("/activateUser")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response activateAccount(@Context HttpRequest request) {
         User user = userBean.findUser(request);
         user.setActivated(true);
@@ -215,7 +215,7 @@ public class UserService {
 
     @POST
     @Path("/updateUser")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response updateUserData(@Context HttpRequest request, ProfileUser profileUser) {
         User user = userBean.findUser(request);
         user.setFirstName(profileUser.getFirstName());
@@ -229,9 +229,9 @@ public class UserService {
     @POST
     @Path("/uploadUserPhoto")
     @Consumes(MULTIPART_FORM_DATA)
-    @JWTTokenNeeded
+    @NeedAuth
     public Response uploadPhoto(@Context HttpRequest request, MultipartFormDataInput input) {
-        Integer id = (Integer) request.getAttribute(JWTTokenNeededFilter.USER);
+        Integer id = (Integer) request.getAttribute(AuthFilter.USER);
         User user = entityManager.find(User.class, id);
 
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();

@@ -1,7 +1,7 @@
 package filter;
 
-import java.security.Key;
-import java.util.logging.Logger;
+import io.jsonwebtoken.Jwts;
+import utils.KeyGenerator;
 
 import javax.annotation.Priority;
 import javax.inject.Inject;
@@ -11,16 +11,15 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-
-import io.jsonwebtoken.Jwts;
-import utils.KeyGenerator;
+import java.security.Key;
+import java.util.logging.Logger;
 
 @Provider
-@JWTTokenNeeded
+@NeedAuth
 @Priority(Priorities.AUTHENTICATION)
-public class JWTTokenNeededFilter implements ContainerRequestFilter
+public class AuthFilter implements ContainerRequestFilter
 {
-	private Logger logger = Logger.getLogger("JWTTokenNeededFilter");
+	private Logger logger = Logger.getLogger("AuthFilter");
 
 	@Inject
 	private KeyGenerator keyGenerator;

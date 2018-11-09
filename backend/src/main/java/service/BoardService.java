@@ -4,10 +4,11 @@ import bean.UserBean;
 import domain.board.Board;
 import domain.card.BoardCard;
 import domain.card.BoardCardList;
+import domain.front.BoardCardParams;
 import domain.front.BoardId;
 import domain.front.BoardParam;
 import domain.user.User;
-import filter.JWTTokenNeeded;
+import filter.NeedAuth;
 import org.jboss.resteasy.spi.HttpRequest;
 
 import javax.ejb.Stateless;
@@ -40,7 +41,7 @@ public class BoardService {
 
     @POST
     @Path("/createBoard")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response createBoard(@Context HttpRequest request, BoardParam boardParam) {
         User user = userBean.findUser(request);
 
@@ -58,7 +59,7 @@ public class BoardService {
 
     @POST
     @Path("/deleteBoard")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response deleteBoard(@Context HttpRequest request, BoardId boardId) {
         User user = userBean.findUser(request);
         Board board = entityManager.find(Board.class, boardId.getId());
@@ -74,7 +75,7 @@ public class BoardService {
 
     @POST
     @Path("/getBoardCards")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response createBoard(@Context HttpRequest request, BoardId boardId) {
         Board board = entityManager.find(Board.class, boardId.getId());
         BoardCardList boardCardList = new BoardCardList();
@@ -90,7 +91,7 @@ public class BoardService {
 
     @POST
     @Path("/getUserBoard")
-    @JWTTokenNeeded
+    @NeedAuth
     public Response getBoardCards(@Context HttpRequest request) {
         User user = userBean.findUser(request);
 
@@ -103,8 +104,17 @@ public class BoardService {
 
     @POST
     @Path("/createBoardCard")
-    @JWTTokenNeeded
-    public Response createBoardCard() {
+    @NeedAuth
+    public Response createBoardCard(BoardCardParams boardCardParams) {
+        //TODO: добавить валидацию
+        BoardCard boardCard = new BoardCard();
+        boardCard.setPrivate(true);
+        boardCard.setCardName(boardCardParams.getCardName());
+        boardCard.setCardType(BoardCard.CardType.valueOf(boardCardParams.getCardType()));
+        boardCard.setBoardId(boardCardParams.getBoardId());
+
+        entityManager.persist(boardCard);
+
         return Response.ok().build();
     }
 }
