@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-container fluid>
+    <v-container fluid >
       <v-layout row wrap pt-4>
         <v-flex xs12 sm4 md3 lg2
           v-for="(dashboard , index) in dashboards" :key="dashboard.name" xs3 md3 lg3 my-1 pa-2>

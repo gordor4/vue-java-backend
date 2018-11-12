@@ -1,5 +1,6 @@
 package service;
 
+import bean.BoardBean;
 import bean.UserBean;
 import domain.board.Board;
 import domain.card.BoardCard;
@@ -38,6 +39,9 @@ public class BoardService {
 
     @Inject
     private UserBean userBean;
+
+    @Inject
+    private BoardBean boardBean;
 
     @POST
     @Path("/createBoard")
@@ -112,6 +116,7 @@ public class BoardService {
         boardCard.setCardName(boardCardParams.getCardName());
         boardCard.setCardType(BoardCard.CardType.valueOf(boardCardParams.getCardType()));
         boardCard.setBoardId(boardCardParams.getBoardId());
+        boardBean.generateContentForType(boardCard);
 
         entityManager.persist(boardCard);
 
