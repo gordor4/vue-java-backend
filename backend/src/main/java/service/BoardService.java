@@ -122,4 +122,13 @@ public class BoardService {
 
         return Response.ok().build();
     }
+
+    @POST
+    @Path("/getBoardCardContent")
+    @NeedAuth
+    public Response getBoardCardContent(BoardCardParams boardCardParams) {
+        Object cardContent = boardBean.getCardContent(boardCardParams);
+
+        return Response.ok(cardContent).build();
+    }
 }

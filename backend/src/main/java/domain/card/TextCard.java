@@ -4,6 +4,9 @@ import javax.persistence.*;
 
 @Table(name = "text_card_content", schema = "public")
 @Entity
+@NamedQueries({
+        @NamedQuery(name = TextCard.FIND_TEXT_CARD_CONTENT, query = "Select c from TextCard WHERE boardCard.id = :id")
+})
 public class TextCard {
 
     @Id
@@ -19,6 +22,8 @@ public class TextCard {
 
     @Column(name = "title")
     private String text;
+
+    public static final String FIND_TEXT_CARD_CONTENT = "find card content";
 
     public int getId() {
         return id;
