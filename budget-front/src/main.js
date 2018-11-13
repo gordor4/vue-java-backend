@@ -16,6 +16,7 @@ import querystring from 'querystring'
 import VueCookie from 'vue-cookie'
 import VueRecaptcha from 'vue-recaptcha'
 import store from './store'
+import VueShowdown from 'vue-showdown'
 
 Vue.config.productionTip = false;
 
@@ -25,6 +26,9 @@ Vue.use(VeeValidate);
 Vue.use(Vuetify);
 Vue.use(VueCookie);
 Vue.use(VueRecaptcha);
+Vue.use(VueShowdown, {
+  emoji: true
+});
 
 Vue.prototype.$http = axios;
 Vue.prototype.$querystring = querystring;

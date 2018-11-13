@@ -19,7 +19,7 @@ public class BoardBean {
         switch (boardCard.getCardType()) {
             case text_card:
                 TextCard textCard = new TextCard();
-                textCard.setBoardCard(boardCard);
+                textCard.setBoardCardId(boardCard.getId());
 
                 entityManager.persist(textCard);
                 break;

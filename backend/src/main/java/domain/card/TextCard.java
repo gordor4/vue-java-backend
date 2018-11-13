@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Table(name = "text_card_content", schema = "public")
 @Entity
 @NamedQueries({
-        @NamedQuery(name = TextCard.FIND_TEXT_CARD_CONTENT, query = "Select c from TextCard WHERE boardCard.id = :id")
+        @NamedQuery(name = TextCard.FIND_TEXT_CARD_CONTENT, query = "Select c from TextCard c WHERE c.boardCardId = :id")
 })
 public class TextCard {
 
@@ -13,15 +13,14 @@ public class TextCard {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @JoinColumn(name = "dashboard_id", referencedColumnName = "id")
-    @OneToOne(fetch = FetchType.LAZY)
-    private BoardCard boardCard;
+    @Column(name = "dashboard_id")
+    private int boardCardId;
 
     @Column(name = "dashboard_text")
-    private String dashboardText;
+    private String cardText;
 
     @Column(name = "title")
-    private String text;
+    private String title;
 
     public static final String FIND_TEXT_CARD_CONTENT = "find card content";
 
@@ -33,27 +32,27 @@ public class TextCard {
         this.id = id;
     }
 
-    public BoardCard getBoardCard() {
-        return boardCard;
+    public int getBoardCardId() {
+        return boardCardId;
     }
 
-    public void setBoardCard(BoardCard boardCard) {
-        this.boardCard = boardCard;
+    public void setBoardCardId(int boardId) {
+        this.boardCardId = boardId;
     }
 
-    public String getDashboardText() {
-        return dashboardText;
+    public String getCardText() {
+        return cardText;
     }
 
-    public void setDashboardText(String dashboardText) {
-        this.dashboardText = dashboardText;
+    public void setCardText(String dashboardText) {
+        this.cardText = dashboardText;
     }
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String text) {
+        this.title = text;
     }
 }

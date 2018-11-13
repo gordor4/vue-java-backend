@@ -43,9 +43,9 @@
         </v-speed-dial>
       </v-toolbar>
       <v-card-text>
-        <v-layout>
-          <v-flex xs12 sm6 md4 lg3>
-            <v-card hover @click.native="openCard(card.id)" v-for="card in boardCards" :key="card.cardName">
+        <v-layout grayBackground>
+          <v-flex xs12 sm6 md4 pa-2 lg3 :key="card.cardName" v-for="card in boardCards">
+            <v-card hover @click.native="openCard(card.id, card.cardType)" >
               <v-card-title>
                 {{card.cardName}}
               </v-card-title>
@@ -84,17 +84,21 @@
     <v-dialog v-model="cardDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
         <v-toolbar dark color="primary">
-
           <v-btn icon dark @click.native="cardDialog = false">
             <v-icon>close</v-icon>
           </v-btn>
         </v-toolbar>
+        <v-card-text>
+          <component v-bind:is=cardTypes.text_card :cardContent=cardContent></component>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
+  import TextCard from '@/components/TextCard.vue'
+
   export default {
     name: "DashboardView",
     data() {
@@ -113,8 +117,9 @@
           boardId: null
         },
         cardTypes: {
-          text_card: 1
-        }
+          text_card: TextCard
+        },
+        cardContent: null
       }
     },
     computed: {
@@ -147,12 +152,20 @@
             this.boardCards = response.data.boardCards;
           })
       },
-      openCard(id) {
-        this.cardDialog = true;
-        this.loadCardContent(id)
+      openCard(id, type) {
+        this.loadCardContent(id, type)
       },
       loadCardContent(id, type) {
-        this.$http.post('')
+        this.$http.post('board/getBoardCardContent',
+          {
+            boardCardId: id, cardType: type
+          }
+        ).then(response => {
+          this.cardContent = response.data;
+          this.cardDialog = true;
+        }).catch(error => {
+          console.log(error)
+        })
       }
 
     },
