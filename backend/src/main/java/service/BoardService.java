@@ -131,4 +131,14 @@ public class BoardService {
 
         return Response.ok(cardContent).build();
     }
+
+    @POST
+    @Path("/updateTextCard")
+    @NeedAuth
+    public Response updateTextCard() {
+
+
+        return Response.ok().build();
+    }
+
 }

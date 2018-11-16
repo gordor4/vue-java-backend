@@ -51,6 +51,13 @@
       editCardText() {
         this.editMode = !this.editMode;
         this.cardText = this.cardContent.cardText
+      },
+      updateTextCard() {
+        this.$http.post('board/updateTextCard', {
+
+        }).then(response => {
+
+        })
       }
     },
     computed: {
