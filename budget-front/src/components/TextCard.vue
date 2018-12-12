@@ -7,9 +7,18 @@
             <v-toolbar-title>
               {{cardContentTitle}}
             </v-toolbar-title>
+            <v-layout aling-end>
               <v-btn icon dark>
                 <v-icon fab @click="editCardText">edit</v-icon>
               </v-btn>
+              <v-btn icon dark>
+                <v-icon fab @click="editCardText">save</v-icon>
+              </v-btn>
+              <v-btn icon dark>
+                <v-icon fab @click="editCardText">settings</v-icon>
+              </v-btn>
+            </v-layout>
+
           </v-toolbar>
           <v-card-text>
             <v-layout row wrap>
