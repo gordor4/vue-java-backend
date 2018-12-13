@@ -5,6 +5,7 @@ import bean.UserBean;
 import domain.board.Board;
 import domain.card.BoardCard;
 import domain.card.BoardCardList;
+import domain.card.TextCard;
 import domain.front.BoardCardParams;
 import domain.front.BoardId;
 import domain.front.BoardParam;
@@ -135,8 +136,11 @@ public class BoardService {
     @POST
     @Path("/updateTextCard")
     @NeedAuth
-    public Response updateTextCard() {
+    public Response updateTextCard(TextCard textCard) {
+        TextCard textCardEntity = entityManager.find(TextCard.class, textCard.getId());
 
+        textCardEntity.setCardText(textCard.getCardText());
+        textCardEntity.setTitle(textCard.getTitle());
 
         return Response.ok().build();
     }

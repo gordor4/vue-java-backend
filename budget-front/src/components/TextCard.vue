@@ -12,7 +12,7 @@
                 <v-icon fab @click="editCardText">edit</v-icon>
               </v-btn>
               <v-btn icon dark>
-                <v-icon fab @click="editCardText">save</v-icon>
+                <v-icon fab @click="updateTextCard">save</v-icon>
               </v-btn>
               <v-btn icon dark>
                 <v-icon fab @click="editCardText">settings</v-icon>
@@ -54,9 +54,11 @@
       },
       updateTextCard() {
         this.$http.post('board/updateTextCard', {
-
+          id: this.cardContent.id,
+          cardText: this.cardText,
+          title: this.title
         }).then(response => {
-
+          console.log('ok', response)
         })
       }
     },
