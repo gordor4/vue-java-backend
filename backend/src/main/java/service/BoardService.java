@@ -145,4 +145,12 @@ public class BoardService {
         return Response.ok().build();
     }
 
+    @POST
+    @Path("/getMessageList")
+    @NeedAuth
+    public Response getMessageList() {
+        //TODO: почитать про сокеты/сокет на чат?
+        return Response.ok().build();
+    }
+
 }

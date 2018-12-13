@@ -23,6 +23,8 @@ create SEQUENCE user_id_seq;
 create SEQUENCE board_id_seq;
 create SEQUENCE board_permission_id_seq;
 create SEQUENCE card_content_id_seq;
+create SEQUENCE chat_card_content_id_seq;
+create SEQUENCE message_id_seq;
 
 
 
@@ -80,3 +82,17 @@ create table text_card_content (
    dashboard_text text,
    title text NOT NULL
 );
+
+create table chat_card_content (
+  "id" int4 DEFAULT nextval('chat_card_content_id_seq'::regclass) PRIMARY KEY,
+  dashboard_id int4 references dashboard_card(id),
+  chat_name text NOT NULL,
+  chat_creator int4 references "user"(id)
+);
+
+create table chat_message (
+  "id" int4 DEFAULT nextval('message_id_seq'::regclass) PRIMARY KEY,
+  author text NOT NULL,
+  contents text NOT NULL,
+  date timestamp NOT NULL
+)
