@@ -28,9 +28,11 @@ export default new Vuex.Store({
     },
     loadUserData(context) {
       axios.post('users/get', {
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/json',
-        }})
+        }
+      })
         .then(response => {
           context.commit('setUser', response.data)
         })

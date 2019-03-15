@@ -1,14 +1,16 @@
-import axios from 'axios'
 import cookie from 'vue-cookie'
 import router from '../router'
+import Axios from 'axios'
 
 
-let instance = axios.create({
-  baseURL: 'http://gordor.host/rest/api/'
+
+let instance = Axios.create({
+  baseURL: 'http://localhost:8080/',
+  withCredentials: true
 });
 
 instance.interceptors.request.use((config) => {
-  config.headers.Authorization = 'Bearer ' + cookie.get('token')
+  config.headers.Authorization = 'Bearer ' + cookie.get('token');
   return config;
 }, (error) => {
   return Promise.reject(error);

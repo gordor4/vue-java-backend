@@ -70,7 +70,7 @@
           this.errorText = '';
           this.loading = true;
 
-          this.$http.post('users/login', this.$querystring.stringify(
+          this.$http.post('auth/auth', this.$querystring.stringify(
             {
               username: this.login.username,
               password: this.login.password
@@ -107,6 +107,6 @@
 
 <style scoped>
   .rounded-btn {
-    border-radius:4px;
+    border-radius: 4px;
   }
 </style>

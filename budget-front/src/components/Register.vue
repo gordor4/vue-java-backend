@@ -71,7 +71,7 @@
     methods: {
       register() {
         if (this.$refs.form.validate()) {
-          this.$http.post('users/create', {
+          this.$http.post('auth/create', {
             "username": this.user.username,
             "password": this.user.password,
             "email": this.user.email

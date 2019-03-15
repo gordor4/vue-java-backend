@@ -49,10 +49,11 @@
       reset() {
         this.loading = true;
 
-        this.$http.post('users/reset', {email: this.email})
+        this.$http.post('auth/reset', {email: this.email})
           .then(response => {
+            console.log(response)
             this.loading = false;
-            this.$route.push('/');
+            this.$router.push('/');
           })
       }
     }
