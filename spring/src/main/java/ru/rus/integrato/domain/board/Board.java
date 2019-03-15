@@ -34,14 +34,6 @@ public class Board {
     @Temporal(TemporalType.DATE)
     private Date creationDate;
 
-    public static final String GET_USER_BOARD = "user boards";
-    public static final String USER_PARAM = "user";
-
-    //TODO: Подумать над разрешениями
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
-//    private List<BoardPermission> boardPermissions;
-
     public int getId() { return id; }
 
     public void setId(int id) {
@@ -88,15 +80,6 @@ public class Board {
         isPublicEdit = publicEdit;
     }
 
-//    public List<BoardPermission> getBoardPermissions() {
-//        return boardPermissions;
-//    }
-//
-//    public void setBoardPermissions(List<BoardPermission> boardPermissions) {
-//        this.boardPermissions = boardPermissions;
-//    }
-
-
     public String getBoardDescription() {
         return boardDescription;
     }
@@ -105,15 +88,7 @@ public class Board {
         this.boardDescription = boardDescription;
     }
 
-    public Boolean getPublic() {
-        return isPublic;
-    }
-
     public void setPublic(Boolean aPublic) {
         isPublic = aPublic;
-    }
-
-    public Boolean getPublicEdit() {
-        return isPublicEdit;
     }
 }

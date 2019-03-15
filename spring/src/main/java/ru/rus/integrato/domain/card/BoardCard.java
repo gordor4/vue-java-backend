@@ -66,8 +66,8 @@ public class BoardCard {
     }
 
     public enum CardType {
-        text_card("text"),
-        email_card("email");
+        TEXT_CARD("text"),
+        EMAIL_CARD("email");
 
         private final String text;
 

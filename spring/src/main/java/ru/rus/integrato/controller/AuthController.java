@@ -15,11 +15,9 @@ import ru.rus.integrato.utils.TokenUtils;
 
 import javax.servlet.ServletContext;
 import java.util.Date;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(path = "/auth")
-//@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 public class AuthController {
 
     @Autowired
@@ -33,9 +31,6 @@ public class AuthController {
 
     @Autowired
     private ServletContext uriInfo;
-
-    private Logger logger = Logger.getLogger("AuthService");
-
 
     @PostMapping(path = "auth", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public TokenResponse authenticateUser(@RequestParam("username") String username,

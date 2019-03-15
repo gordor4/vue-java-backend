@@ -84,7 +84,7 @@ public class BoardController {
         BoardCardList boardCardList = new BoardCardList();
         boardCardList.setBoard(board);
 
-        List<BoardCard> boardCards = boardCardRepository.getBoardCardByBoardId(board.getId());;
+        List<BoardCard> boardCards = boardCardRepository.getBoardCardByBoardId(board.getId());
 
         boardCardList.setBoardCards(boardCards);
         return ResponseEntity.ok(boardCardList);

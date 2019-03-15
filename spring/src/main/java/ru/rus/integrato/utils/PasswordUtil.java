@@ -6,12 +6,15 @@ import java.security.SecureRandom;
 import org.apache.commons.codec.binary.Base64;
 
 public class PasswordUtil {
-    private static final int iterations = 1000;
-    private static final int saltLen = 16;
-    private static final int desiredKeyLen = 256;
+
+    private PasswordUtil() {}
+
+    private static final int ITERATIONS = 1000;
+    private static final int SALT_LEN = 16;
+    private static final int DESIRED_KEY_LEN = 256;
 
     public static String getSaltedHash(String password) throws Exception {
-        byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(saltLen);
+        byte[] salt = SecureRandom.getInstance("SHA1PRNG").generateSeed(SALT_LEN);
         // store the salt with the password
         return Base64.encodeBase64String(salt) + "$" + hash(password, salt);
     }
@@ -32,7 +35,7 @@ public class PasswordUtil {
             throw new IllegalArgumentException("Empty passwords are not supported.");
         SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
         SecretKey key = f.generateSecret(new PBEKeySpec(
-                password.toCharArray(), salt, iterations, desiredKeyLen));
+                password.toCharArray(), salt, ITERATIONS, DESIRED_KEY_LEN));
         return Base64.encodeBase64String(key.getEncoded());
     }
 }

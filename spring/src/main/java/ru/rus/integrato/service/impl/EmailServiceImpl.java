@@ -16,6 +16,7 @@ public class EmailServiceImpl implements EmailService {
     private static final String RESET_EMAIL_SUBJECT = "Reset password";
     private static final String RESET_PASSWORD_HREF = "<a href=\"%s/resetPassword?token=%s\">Восстановить доступ</a>";
     private static final String HOST = "http://site.gordor.host";
+    private static final String FROM = "mail@gordor.host";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -37,7 +38,7 @@ public class EmailServiceImpl implements EmailService {
     private void send(String email, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        message.setFrom("mail@gordor.host");
+        message.setFrom(FROM);
         message.setFrom(SENDER_EMAIL);
         message.setTo(email);
         message.setSubject(subject);

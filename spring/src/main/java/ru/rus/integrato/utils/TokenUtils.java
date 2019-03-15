@@ -9,6 +9,9 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class TokenUtils {
+
+    private TokenUtils() {}
+
     public static String issueToken(String login, String id, KeyGenerator keyGenerator, String contextPath) {
         Key key = keyGenerator.generateKey();
 

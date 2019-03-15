@@ -16,12 +16,14 @@ public class CardServiceImpl implements CardService {
 
     public void generateContentForType(BoardCard boardCard) {
         switch (boardCard.getCardType()) {
-            case text_card:
+            case TEXT_CARD:
                 TextCard textCard = new TextCard();
                 textCard.setBoardCardId(boardCard.getId());
 
                 textCardRepository.save(textCard);
                 break;
+            default:
+                return;
         }
     }
 
@@ -29,7 +31,7 @@ public class CardServiceImpl implements CardService {
         BoardCard.CardType cardType = BoardCard.CardType.valueOf(boardCardParams.getCardType());
 
         switch (cardType) {
-            case text_card:
+            case TEXT_CARD:
                 return textCardRepository.getTextCardByBoardCardId(boardCardParams.getBoardCardId());
             default:
                 return null;

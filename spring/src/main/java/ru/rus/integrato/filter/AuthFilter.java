@@ -1,9 +1,7 @@
 package ru.rus.integrato.filter;
 
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import ru.rus.integrato.utils.KeyGenerator;
 
@@ -13,18 +11,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.security.Key;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 public class AuthFilter extends GenericFilterBean {
-    private Logger logger = Logger.getLogger("AuthFilter");
+    private Logger log = Logger.getLogger("AuthFilter");
     private KeyGenerator keyGenerator;
 
     public static final String USER = "USER";
-    private static final String ID_KEY = "jti";
 
     public AuthFilter(KeyGenerator keyGenerator) {
         this.keyGenerator = keyGenerator;
@@ -40,19 +37,17 @@ public class AuthFilter extends GenericFilterBean {
                 String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
                 String token = authorizationHeader.substring("Bearer".length()).trim();
-                System.out.println("header: " + authorizationHeader);
-
                 Key key = keyGenerator.generateKey();
                 String user = Jwts.parser()
                         .setSigningKey(key)
                         .parseClaimsJws(token)
                         .getBody().getSubject();
 
-                logger.info("#### valid token : " + token);
+                log.log(Level.SEVERE, "#### valid token : %s", token);
 
                 servletRequest.setAttribute(USER, user);
             } catch (Exception e) {
-                logger.severe("#### invalid token");
+                log.severe("#### invalid token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token.");
                 return;
             }

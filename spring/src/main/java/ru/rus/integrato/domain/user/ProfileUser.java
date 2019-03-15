@@ -18,8 +18,8 @@ public class ProfileUser {
         this.secondName = user.getSecondName();
         this.email = user.getEmail();
 
-        Avatar avatar = user.getAvatar();
-        this.avatar = avatar != null ? avatar.getBinary() : defaultAvatar;
+        Avatar userAvatar = user.getAvatar();
+        this.avatar = userAvatar != null ? userAvatar.getBinary() : defaultAvatar;
     }
 
     public String getUsername() {
