@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(path = "/users")
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-//@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 public class UserController {
 
     @Autowired

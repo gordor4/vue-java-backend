@@ -49,7 +49,7 @@ public class BoardController {
     private CardService cardService;
 
     @PostMapping(path = "/createBoard", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createBoardCard(@RequestBody BoardParam boardParam) {
+    public ResponseEntity getUserBoards(@RequestBody BoardParam boardParam) {
         User user = userRepository.findUserByUsername((String) request.getAttribute(AuthFilter.USER));
 
         Board board = new Board();
@@ -79,7 +79,7 @@ public class BoardController {
     }
 
     @PostMapping(path = "/getBoardCards", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity createBoardCard(@RequestBody BoardId boardId) {
+    public ResponseEntity getUserBoardCards(@RequestBody BoardId boardId) {
         Board board = boardRepository.getOne(boardId.getId());
         BoardCardList boardCardList = new BoardCardList();
         boardCardList.setBoard(board);
@@ -87,11 +87,11 @@ public class BoardController {
         List<BoardCard> boardCards = boardCardRepository.getBoardCardByBoardId(board.getId());;
 
         boardCardList.setBoardCards(boardCards);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(boardCardList);
     }
 
     @PostMapping(path = "/getUserBoard")
-    public ResponseEntity createBoardCard() {
+    public ResponseEntity getUserBoards() {
         User user = userRepository.findUserByUsername((String) request.getAttribute(AuthFilter.USER));
         List<Board> userBoards = boardRepository.getBoardsByOwnerId(user.getId());
         return ResponseEntity.ok(userBoards);
