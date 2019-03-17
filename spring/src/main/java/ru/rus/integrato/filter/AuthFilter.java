@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -43,8 +42,6 @@ public class AuthFilter extends GenericFilterBean {
                         .parseClaimsJws(token)
                         .getBody().getSubject();
 
-                log.log(Level.SEVERE, "#### valid token : %s", token);
-
                 servletRequest.setAttribute(USER, user);
             } catch (Exception e) {
                 log.severe("#### invalid token");
@@ -52,7 +49,6 @@ public class AuthFilter extends GenericFilterBean {
                 return;
             }
         }
-
 
         filterChain.doFilter(servletRequest, servletResponse);
     }

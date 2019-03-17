@@ -14,11 +14,11 @@ public class CardServiceImpl implements CardService {
     @Autowired
     private TextCardRepository textCardRepository;
 
-    public void generateContentForType(BoardCard boardCard) {
-        switch (boardCard.getCardType()) {
+    public void generateContentForType(BoardCard card) {
+        switch (card.getCardType()) {
             case TEXT_CARD:
                 TextCard textCard = new TextCard();
-                textCard.setBoardCardId(boardCard.getId());
+                textCard.setBoardCardId(card.getId());
 
                 textCardRepository.save(textCard);
                 break;

@@ -1,10 +1,11 @@
 package ru.rus.integrato.domain.card;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Table(name = "dashboard_card", schema = "public")
 @Entity
-public class BoardCard {
+public class BoardCard implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -66,7 +67,7 @@ public class BoardCard {
     }
 
     public enum CardType {
-        TEXT_CARD("text"),
+        TEXT_CARD("text_card"),
         EMAIL_CARD("email");
 
         private final String text;

@@ -20,6 +20,7 @@ import ru.rus.integrato.utils.KeyGenerator;
 @EntityScan("ru.rus.integrato.domain")
 @EnableJpaRepositories("ru.rus.integrato.repository")
 public class AppBeans {
+
     @Autowired
     private KeyGenerator keyGenerator;
 

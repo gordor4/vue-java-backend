@@ -50,8 +50,8 @@ public class UserController {
         }
     }
 
-    @PostMapping(path = "/findUser")
-    public ResponseEntity getUser(User userParam) {
+    @PostMapping(path = "/findUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getUser(@RequestBody User userParam) {
         User user = userRepository.findUserByUsername(userParam.getUsername());
 
         return ResponseEntity.ok(user);
@@ -66,8 +66,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(path = "/updateUser")
-    public ResponseEntity updateUserData(ProfileUser profileUser) {
+    @PostMapping(path = "/updateUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateUserData(@RequestBody ProfileUser profileUser) {
         User user = userRepository.findUserByUsername((String) request.getAttribute(AuthFilter.USER));
 
         user.setFirstName(profileUser.getFirstName());

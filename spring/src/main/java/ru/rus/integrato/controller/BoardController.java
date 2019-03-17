@@ -21,8 +21,10 @@ import ru.rus.integrato.repository.UserRepository;
 import ru.rus.integrato.service.CardService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -79,15 +81,24 @@ public class BoardController {
     }
 
     @PostMapping(path = "/getBoardCards", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getUserBoardCards(@RequestBody BoardId boardId) {
-        Board board = boardRepository.getOne(boardId.getId());
-        BoardCardList boardCardList = new BoardCardList();
-        boardCardList.setBoard(board);
+    public ResponseEntity getBoardCards(@RequestBody BoardId boardId) {
+        Optional<Board> board = boardRepository.findById(boardId.getId());
+        if(!board.isPresent())
+            return ResponseEntity.notFound().build();
+        else {
+            BoardCardList boardCardList = new BoardCardList();
+            Board boardEntity = board.get();
+            boardCardList.setBoard(boardEntity);
 
-        List<BoardCard> boardCards = boardCardRepository.getBoardCardByBoardId(board.getId());
+            List<BoardCard> boardCards = boardCardRepository.getBoardCardByBoardId(boardEntity.getId());
 
-        boardCardList.setBoardCards(boardCards);
-        return ResponseEntity.ok(boardCardList);
+            if(!boardCards.isEmpty())
+                boardCardList.setBoardCards(boardCards);
+            else
+                boardCardList.setBoardCards(new ArrayList<>());
+
+            return ResponseEntity.ok(boardCardList);
+        }
     }
 
     @PostMapping(path = "/getUserBoard")
@@ -106,9 +117,9 @@ public class BoardController {
         boardCard.setCardName(boardCardParams.getCardName());
         boardCard.setCardType(BoardCard.CardType.valueOf(boardCardParams.getCardType()));
         boardCard.setBoardId(boardCardParams.getBoardId());
-        cardService.generateContentForType(boardCard);
 
-        boardCardRepository.save(boardCard);
+        BoardCard card = boardCardRepository.save(boardCard);
+        cardService.generateContentForType(card);
 
         return ResponseEntity.ok().build();
     }
@@ -122,11 +133,18 @@ public class BoardController {
 
     @PostMapping(path = "/updateTextCard", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTextCard(@RequestBody TextCard textCard) {
-        TextCard textCardEntity = textCardRepository.getOne(textCard.getId());
+        Optional<TextCard> textCardEntity = textCardRepository.findById(textCard.getId());
 
-        textCardEntity.setCardText(textCard.getCardText());
-        textCardEntity.setTitle(textCard.getTitle());
+        if(textCardEntity.isPresent()) {
+            TextCard text = textCardEntity.get();
+            text.setCardText(textCard.getCardText());
+            text.setTitle(textCard.getTitle());
 
-        return ResponseEntity.ok().build();
+            textCardRepository.save(text);
+
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
