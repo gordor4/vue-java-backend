@@ -42,7 +42,7 @@
             </v-layout>
             <v-layout row wrap align-center justify-end fill-height>
               <v-flex xs12 md6 sm6 lg3>
-                <v-btn block outline color="primary" @click="updateUserData">Сохранить</v-btn>
+                <v-btn block outline color="primary" @click="updateUser">Сохранить</v-btn>
               </v-flex>
             </v-layout>
           </v-card-text>
@@ -123,7 +123,7 @@
 
           })
       },
-      updateUserData() {
+      updateUser() {
         this.$http.post('users/updateUser', this.user)
           .then(response => {
 

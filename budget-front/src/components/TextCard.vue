@@ -58,7 +58,7 @@
           cardText: this.cardText,
           title: this.title
         }).then(response => {
-          console.log('ok', response)
+
         })
       }
     },

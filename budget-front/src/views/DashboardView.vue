@@ -45,7 +45,7 @@
       <v-card-text>
         <v-layout grayBackground>
           <v-flex xs12 sm6 md4 pa-2 lg3 :key="card.cardName" v-for="card in boardCards">
-            <v-card hover @click.native="openCard(card.id, card.cardType)" >
+            <v-card hover @click.native="openCard(card.id, card.cardType)">
               <v-card-title>
                 {{card.cardName}}
               </v-card-title>
@@ -104,12 +104,12 @@
     data() {
       return {
         board: {},
-        boardCards: [{cardName: null}],
+        boardCards: [],
         fab: false,
         cardDialog: false,
         newCardDialog: false,
         newCardTypes: [
-          {name: 'Текстовая карточка', type: 'text_card'}
+          {name: 'Текстовая карточка', type: 'TEXT_CARD'}
         ],
         newCard: {
           cardName: '',
